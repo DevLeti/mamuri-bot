@@ -48,14 +48,20 @@
 프로젝트에 기여하고 싶으신 분들은 아래 절차를 따라주시기 바랍니다.
 
 1. 프로젝트 fork
-2. feature branch 생성 (git checkout -b feature/n-name) (프로젝트 feature를 구분하기 위해 feature name 앞에 숫자를 넣습니다.)
+2. feature branch 생성 (git checkout -b feature/name)
 3. commit (git commit -m "Add feature)
-4. push (git push origin feature/n-name)
+4. push (git push origin feature/name)
 5. pull request 생성
+
+## License
+
+---
+
+MIT 라이센스 아래 사용 가능합니다. LICENSE.txt를 통해 자세한 정보를 확인하세요.
 
 ## Contact
 
 ---
 
-- 유명현, mhlew0106@khu.ac.kr
-- 윤준석, phobyjun@gmail.com
+- 유명현: mhlew0106@khu.ac.kr
+- 윤준석: phobyjun@khu.ac.kr
