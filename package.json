@@ -1,0 +1,21 @@
+{
+  "name": "secondhand-noti-bot",
+  "version": "1.0.0",
+  "description": "secondhand notification bot with keyword",
+  "main": "app.js",
+  "scripts": {
+    "start": "node ./app.js",
+    "start:dev": "nodemon ./app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://khuhub.khu.ac.kr/2018102211/secondhand-noti-bot.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.1",
+    "nodemon": "^2.0.16"
+  }
+}
