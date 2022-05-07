@@ -23,15 +23,15 @@
 ### Installation
 
 1. Clone the repository
-   ```sh
+   ```
    git clone http://khuhub.khu.ac.kr/2018102211/secondhand-noti-bot
    ```
 2. Install NPM packages
-   ```sh
+   ```
    npm install
    ```
 3. Start Project
-   ```sh
+   ```
    npm start
    ```
 
