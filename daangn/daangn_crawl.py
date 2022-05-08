@@ -3,6 +3,10 @@ from bs4 import BeautifulSoup
 import requests
 import json
 
+# TODO: 크롤링한 데이터가 이미 서버에 있는지 확인하는 method 필요
+def check_duplication_item(item):
+    return
+
 def save_json(parsed_items):
     with open('./sample.json', 'w') as f:
         json.dump(parsed_items, f, indent=2, ensure_ascii=False)
