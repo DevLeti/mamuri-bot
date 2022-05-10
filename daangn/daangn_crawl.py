@@ -13,31 +13,18 @@ def save_json(parsed_items):
     
 def convert_item_to_dict(item):
     dict_item = {}
-    dict_item["item-thumbnail"] = item.find("img")["src"]
-    dict_item["item-title"] = item.find("span", class_="article-title").text.strip()
-    dict_item["item-content"] = item.find("span", class_="article-content").text.strip()
-    dict_item["item-region"] = item.find("p", class_="article-region-name").text.strip()
-    dict_item["item-price"] = item.find("p", class_="article-price").text.strip()
-    if(item.find("span", class_="article-watch") == None):
-        dict_item["item-watch-count"] = '0'
-    else:
-        dict_item["item-watch-count"] = item.find("span", class_="article-watch").text.strip()
+    dict_item["platform"] = "daangn"
+    dict_item["itemUrl"] = "https://www.daangn.com" + item["href"]
+    dict_item["thumbnailUrl"] = item.find("img")["src"]
+    dict_item["name"] = item.find("span", class_="article-title").text.strip()
+    dict_item["extraInfo"] = item.find("span", class_="article-content").text.strip()
+    # dict_item["item-region"] = item.find("p", class_="article-region-name").text.strip()
+    dict_item["price"] = item.find("p", class_="article-price").text.strip()
+    # if(item.find("span", class_="article-watch") == None):
+    #     dict_item["item-watch-count"] = '0'
+    # else:
+    #     dict_item["item-watch-count"] = item.find("span", class_="article-watch").text.strip()
     return dict_item
-
-# def convert_item_to_json(item):
-#     dict_item = {}
-#     dict_item["item-thumbnail"] = item.find("img")["src"]
-#     dict_item["item-title"] = item.find("span", class_="article-title").text.strip()
-#     dict_item["item-content"] = item.find("span", class_="article-content").text.strip()
-#     dict_item["item-region"] = item.find("p", class_="article-region-name").text.strip()
-#     dict_item["item-price"] = item.find("p", class_="article-price").text.strip()
-#     if(item.find("span", class_="article-watch") == None):
-#         dict_item["item-watch-count"] = '0'
-#     else:
-#         dict_item["item-watch-count"] = item.find("span", class_="article-watch").text.strip()
-
-#     json_item = json.dumps(dict_item, ensure_ascii=False)
-#     return json_item
 
 def crawl(keyword):
     if type(keyword) != type("test string"):
