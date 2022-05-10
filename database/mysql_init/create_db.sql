@@ -1,4 +1,4 @@
-CREATE DATABASE secondhand-noti-bot;
+CREATE DATABASE mamuri_db;
 
 CREATE TABLE user
 (
