@@ -5,7 +5,7 @@ import daangn_crawl
 # uvicorn main:app --reload
 app = FastAPI()
 
-@app.get("/daangn/{item}")
+@app.get("/api/v2/daangn/{item}")
 def read_item(item: str, q: Optional[str] = None):
     crawl_json = daangn_crawl.crawl(item)
     return crawl_json
