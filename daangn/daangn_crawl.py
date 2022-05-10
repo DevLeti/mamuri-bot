@@ -3,10 +3,6 @@ from bs4 import BeautifulSoup
 import requests
 import json
 
-# TODO: 크롤링한 데이터가 이미 서버에 있는지 확인하는 method 필요
-def check_duplication_item(item):
-    return
-
 def save_json(parsed_items):
     with open('./sample.json', 'w') as f:
         json.dump(parsed_items, f, indent=2, ensure_ascii=False)
@@ -14,17 +10,27 @@ def save_json(parsed_items):
 def convert_item_to_dict(item):
     dict_item = {}
     dict_item["platform"] = "daangn"
-    dict_item["itemUrl"] = "https://www.daangn.com" + item["href"]
-    dict_item["thumbnailUrl"] = item.find("img")["src"]
     dict_item["name"] = item.find("span", class_="article-title").text.strip()
+    unparsed_price = item.find("p", class_="article-price").text.strip(" \n ")
+    unparsed_price = unparsed_price.replace("원", "")\
+                                   .replace("만", "0000")\
+                                   .replace(",", "")
+    parsed_price = int(unparsed_price)
+    print(parsed_price)
+    dict_item["price"] = parsed_price
+    # dict_item["price"] = item.find("p", class_="article-price").text.strip()
+    dict_item["thumbnailUrl"] = item.find("img")["src"]
+    dict_item["itemUrl"] = "https://www.daangn.com" + item["href"]
     dict_item["extraInfo"] = item.find("span", class_="article-content").text.strip()
-    # dict_item["item-region"] = item.find("p", class_="article-region-name").text.strip()
-    dict_item["price"] = item.find("p", class_="article-price").text.strip()
+    # dict_item["item-region"] = item.find("p", class_="article-region-name").text.strip() # 거래 지역
+
+    # 좋아요 개수
     # if(item.find("span", class_="article-watch") == None):
     #     dict_item["item-watch-count"] = '0'
     # else:
     #     dict_item["item-watch-count"] = item.find("span", class_="article-watch").text.strip()
     return dict_item
+
 
 def crawl(keyword):
     if type(keyword) != type("test string"):
@@ -45,9 +51,9 @@ def crawl(keyword):
         json_item = convert_item_to_dict(item)
         parsed_items["items"].append(json_item)
     
+    # sample 저장
     save_json(parsed_items)
-    json_items = json.dumps(parsed_items, ensure_ascii=False, indent=2)
-    return json_items
+    return parsed_items
 
 if __name__ == "__main__":
-    print(crawl("RTX 3080"))
+    print(crawl("아메리카노"))
