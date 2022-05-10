@@ -8,4 +8,4 @@ services:
     ports:
       - '33060:3306'
     env_file:
-      - ".env"
+      - "./mysql_init/.env"
