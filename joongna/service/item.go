@@ -1,7 +1,8 @@
 package service
 
 import (
-	"fmt"
+	"encoding/json"
+	"io"
 	"io/ioutil"
 	"joongna/config"
 	"joongna/model"
@@ -15,11 +16,11 @@ func GetItemByKeyword(keyword string) ([]model.Item, error) {
 	return items, nil
 }
 
-func GetItemInfoByKeyword(keyword string) {
+func getItemsInfoByKeyword(keyword string) []model.ApiResponseItem {
 	encText := url.QueryEscape("중고나라" + keyword)
-	url := "https://openapi.naver.com/v1/search/cafearticle.json?query=" + encText + "&sort=sim"
+	apiUrl := "https://openapi.naver.com/v1/search/cafearticle.json?query=" + encText + "&sort=sim"
 
-	req, err := http.NewRequest("GET", url, nil)
+	req, err := http.NewRequest("GET", apiUrl, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -31,9 +32,18 @@ func GetItemInfoByKeyword(keyword string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(resp.Body)
 
-	bytes, _ := ioutil.ReadAll(resp.Body)
-	str := string(bytes)
-	fmt.Println(str)
+	response, _ := ioutil.ReadAll(resp.Body)
+	var apiResponse model.ApiResponse
+	err = json.Unmarshal(response, &apiResponse)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return apiResponse.Items
 }
