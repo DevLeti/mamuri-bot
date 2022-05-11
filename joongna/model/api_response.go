@@ -13,5 +13,4 @@ type ApiResponseItem struct {
 	Link        string `json:"link"`
 	Description string `json:"description"`
 	CafeName    string `json:"cafename"`
-	CafeUrl     string `json:"cafeurl"`
 }
