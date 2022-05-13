@@ -1,6 +1,10 @@
 package router
 
-import "github.com/labstack/echo/v4"
+import (
+	"joongna/controller"
+
+	"github.com/labstack/echo/v4"
+)
 
 const (
 	API        = "/api/v2"
