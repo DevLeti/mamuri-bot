@@ -1,5 +1,9 @@
 FROM golang:1.17.3
 
+ENV Xvfb :99
+ENV DISPLAY=:99
+ENV GO111MODULE=on
+
 RUN apt-get -y update
 RUN apt-get install -y wget xvfb gnupg
 
@@ -12,5 +16,10 @@ RUN apt-get install -yqq unzip
 RUN wget -O /tmp/chromedriver.zip http://chromedriver.storage.googleapis.com/`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE`/chromedriver_linux64.zip
 RUN unzip /tmp/chromedriver.zip chromedriver -d /usr/local/bin/
 
-ENV Xvfb :99
-ENV DISPLAY=:99
+WORKDIR /src
+COPY . /src
+
+RUN go build -o Joongna_api_server
+
+EXPOSE 8080
+CMD ["./Joongna_api_server"]

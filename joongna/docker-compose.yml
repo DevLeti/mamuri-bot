@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  joongna_api:
+    image: joongna-api-server
+    restart: always
+    container_name: joongna-api-server-container
+    ports:
+      - '18081:8080'
