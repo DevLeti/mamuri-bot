@@ -3,7 +3,6 @@ package service
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"joongna/config"
@@ -42,7 +41,6 @@ func GetItemByKeyword(keyword string) ([]model.Item, error) {
 			ItemUrl:      itemUrl,
 			ExtraInfo:    extraInfo,
 		}
-		fmt.Println(item)
 		items = append(items, item)
 	}
 	return items, nil
