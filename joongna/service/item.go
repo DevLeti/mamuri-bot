@@ -86,7 +86,7 @@ func crawlingNaverCafe(cafeUrl string) (string, int, string, string) {
 	if err != nil {
 		log.Println(err)
 	}
-	desired := webdriver.Capabilities{"Platform": "MacOS"}
+	desired := webdriver.Capabilities{"Platform": "Linux"}
 	required := webdriver.Capabilities{}
 	session, err := driver.NewSession(desired, required)
 	if err != nil {
@@ -97,7 +97,10 @@ func crawlingNaverCafe(cafeUrl string) (string, int, string, string) {
 		log.Println(err)
 	}
 	time.Sleep(time.Second * 1)
-	session.FocusOnFrame("cafe_main")
+	err = session.FocusOnFrame("cafe_main")
+	if err != nil {
+		log.Fatal(err)
+	}
 	resp, err := session.Source()
 
 	html, err := goquery.NewDocumentFromReader(bytes.NewReader([]byte(resp)))
