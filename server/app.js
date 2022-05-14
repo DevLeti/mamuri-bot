@@ -1,7 +1,7 @@
 const express = require("express");
 const line = require("@line/bot-sdk");
+const setFlexMessage = require("./pushMessage");
 require("dotenv").config();
-console.log(process.env.channelAccessToken, process.env.channelSecret);
 const config = {
   channelAccessToken: process.env.channelAccessToken,
   channelSecret: process.env.channelSecret,
@@ -22,14 +22,22 @@ function handleEvent(event) {
   console.log(event);
 
   // push
-  client.pushMessage(event.source.userId, {
-    type: "text",
-    text: "hihihi",
+  // 매물 테스트 알림
+  return client.pushMessage(event.source.userId, {
+    type: "flex",
+    altText: "새로운 매물이 왔어요!",
+    contents: setFlexMessage(
+      "daangn",
+      "RTX 3080",
+      "1000000",
+      "https://dnvefa72aowie.cloudfront.net/origin/article/202205/94cdd237258671d5806a70f64ab2b3c7dcd790da0384b394ef5809fe10c08ced.webp?q=95&s=1440x1440&t=inside",
+      "https://www.daangn.com/articles/403755360"
+    ),
   });
-  return client.replyMessage(event.replyToken, {
-    type: "text",
-    text: event.message.text,
-  });
+  // return client.replyMessage(event.replyToken, {
+  //   type: "text",
+  //   text: event.message.text,
+  // });
 }
 
 app.listen(3000);
