@@ -1,6 +1,6 @@
 const express = require("express");
 const line = require("@line/bot-sdk");
-const setFlexMessage = require("./pushMessage");
+const setFlexMessage = require("./apis/setFlexMessage");
 require("dotenv").config();
 const config = {
   channelAccessToken: process.env.channelAccessToken,
@@ -41,3 +41,4 @@ function handleEvent(event) {
 }
 
 app.listen(3000);
+console.log("listening...");
