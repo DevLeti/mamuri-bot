@@ -6,6 +6,6 @@ services:
     restart: always
     container_name: mamuri-db-container
     ports:
-      - '33060:3306'
+      - '13060:3306'
     env_file:
       - "./mysql_init/.env"
