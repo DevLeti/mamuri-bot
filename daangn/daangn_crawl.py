@@ -3,6 +3,27 @@ from bs4 import BeautifulSoup
 import requests
 import json
 
+def parse_price(unparsed_price):
+    over_ten_thousand = False
+    if "만" in unparsed_price:
+        over_ten_thousand = True
+
+    unparsed_price = unparsed_price.replace("원", "")\
+                                   .replace("만", "0000")\
+                                   .replace(",", "")\
+                                   .split()
+    print(unparsed_price)
+    if(over_ten_thousand):
+        # 100만 2000원 같이 천원 단위가 있을 경우 split 과정에서 만의 단위, 천의 단위가 분리됩니다
+        if len(unparsed_price) > 1:
+            parsed_price = int(unparsed_price[0][0:-4] + unparsed_price[1])
+        else:
+            parsed_price = int(unparsed_price[0])
+    else:
+        parsed_price = int(unparsed_price[0])
+    
+    return parsed_price
+
 def save_json(parsed_items):
     with open('./sample.json', 'w') as f:
         json.dump(parsed_items, f, indent=2, ensure_ascii=False)
@@ -12,12 +33,7 @@ def convert_item_to_dict(item):
     dict_item["platform"] = "daangn"
     dict_item["name"] = item.find("span", class_="article-title").text.strip()
     unparsed_price = item.find("p", class_="article-price").text.strip(" \n ")
-    unparsed_price = unparsed_price.replace("원", "")\
-                                   .replace("만", "0000")\
-                                   .replace(",", "")
-    parsed_price = int(unparsed_price)
-    print(parsed_price)
-    dict_item["price"] = parsed_price
+    dict_item["price"] = parse_price(unparsed_price)
     # dict_item["price"] = item.find("p", class_="article-price").text.strip()
     dict_item["thumbnailUrl"] = item.find("img")["src"]
     dict_item["itemUrl"] = "https://www.daangn.com" + item["href"]
