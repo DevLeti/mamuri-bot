@@ -439,6 +439,3 @@ cython_debug/
 .env
 
 # End of https://www.toptal.com/developers/gitignore/api/jetbrains,visualstudiocode,python,node
-
-# Ignore line Chat bot credentials
-.env
