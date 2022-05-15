@@ -3,6 +3,7 @@ package service
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"joongna/config"
@@ -12,6 +13,7 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
@@ -20,29 +22,27 @@ import (
 
 func GetItemByKeyword(keyword string) ([]model.Item, error) {
 	var items []model.Item
+	wg := sync.WaitGroup{}
 
 	itemsInfo := getItemsInfoByKeyword(keyword)
+
 	for _, itemInfo := range itemsInfo {
+		itemUrl := itemInfo.Link
 		if itemInfo.CafeName != "중고나라" {
 			continue
 		}
-		itemUrl := itemInfo.Link
-		sold, price, thumbnailUrl, extraInfo := crawlingNaverCafe(itemUrl)
-
-		if sold == "판매 완료" {
-			continue
-		}
-
-		item := model.Item{
-			Platform:     "중고나라",
-			Name:         itemInfo.Title,
-			Price:        price,
-			ThumbnailUrl: thumbnailUrl,
-			ItemUrl:      itemUrl,
-			ExtraInfo:    extraInfo,
-		}
-		items = append(items, item)
+		wg.Add(1)
+		go func(itemUrl string) {
+			defer wg.Done()
+			err, item := crawlingNaverCafe(itemUrl)
+			if err != nil {
+				log.Fatal(err)
+			}
+			items = append(items, *item)
+		}(itemUrl)
 	}
+	wg.Wait()
+
 	return items, nil
 }
 
@@ -78,31 +78,45 @@ func getItemsInfoByKeyword(keyword string) []model.ApiResponseItem {
 	return apiResponse.Items
 }
 
-func crawlingNaverCafe(cafeUrl string) (string, int, string, string) {
-	page := rod.New().MustConnect().MustPage(cafeUrl)
-
-	time.Sleep(time.Second * 1)
-
-	source := page.MustElement("iframe#cafe_main").MustFrame().MustHTML()
+func crawlingNaverCafe(cafeUrl string) (error, *model.Item) {
+	frame := rod.New().MustConnect().MustPage(cafeUrl).MustElement("iframe#cafe_main")
+	time.Sleep(time.Second * 2)
+	source := frame.MustFrame().MustHTML()
 	html, err := goquery.NewDocumentFromReader(bytes.NewReader([]byte(source)))
 	if err != nil {
-		log.Fatal(err)
+		return err, nil
 	}
 
+	title := html.Find("h3.title_text").Text()
 	sold := html.Find("div.sold_area").Text()
 	price := priceStringToInt(html.Find(".ProductPrice").Text())
 	thumbnailUrl, _ := html.Find("div.product_thumb img").Attr("src")
 	extraInfo := html.Find(".se-module-text").Text()
 
+	title = strings.TrimSpace(title)
 	sold = strings.TrimSpace(sold)
 	thumbnailUrl = strings.TrimSpace(thumbnailUrl)
 	extraInfo = strings.TrimSpace(extraInfo)
 
-	return sold, price, thumbnailUrl, extraInfo
+	item := model.Item{
+		Platform:     "중고나라",
+		Name:         title,
+		Price:        price,
+		ThumbnailUrl: thumbnailUrl,
+		ItemUrl:      cafeUrl,
+		ExtraInfo:    extraInfo,
+	}
+	fmt.Println("crawling " + cafeUrl + " title: " + title)
+
+	return nil, &item
 }
 
 func priceStringToInt(priceString string) int {
 	strings.TrimSpace(priceString)
+
+	if priceString == "" {
+		return 0
+	}
 
 	priceString = strings.ReplaceAll(priceString, "원", "")
 	priceString = strings.ReplaceAll(priceString, ",", "")
