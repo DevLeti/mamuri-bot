@@ -15,7 +15,7 @@ import (
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/fedesog/webdriver"
+	"github.com/go-rod/rod"
 )
 
 func GetItemByKeyword(keyword string) ([]model.Item, error) {
@@ -79,29 +79,12 @@ func getItemsInfoByKeyword(keyword string) []model.ApiResponseItem {
 }
 
 func crawlingNaverCafe(cafeUrl string) (string, int, string, string) {
-	driver := webdriver.NewChromeDriver("./chromedriver")
-	err := driver.Start()
-	if err != nil {
-		log.Println(err)
-	}
-	desired := webdriver.Capabilities{"Platform": "Linux"}
-	required := webdriver.Capabilities{}
-	session, err := driver.NewSession(desired, required)
-	if err != nil {
-		log.Println(err)
-	}
-	err = session.Url(cafeUrl)
-	if err != nil {
-		log.Println(err)
-	}
-	time.Sleep(time.Second * 1)
-	err = session.FocusOnFrame("cafe_main")
-	if err != nil {
-		log.Fatal(err)
-	}
-	resp, err := session.Source()
+	page := rod.New().MustConnect().MustPage(cafeUrl)
 
-	html, err := goquery.NewDocumentFromReader(bytes.NewReader([]byte(resp)))
+	time.Sleep(time.Second * 1)
+
+	source := page.MustElement("iframe#cafe_main").MustFrame().MustHTML()
+	html, err := goquery.NewDocumentFromReader(bytes.NewReader([]byte(source)))
 	if err != nil {
 		log.Fatal(err)
 	}

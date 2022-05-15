@@ -9,6 +9,7 @@ require (
 	github.com/bunsenapp/go-selenium v0.1.0 // indirect
 	github.com/caarlos0/env/v6 v6.9.1 // indirect
 	github.com/fedesog/webdriver v0.0.0-20180606182539-99f36c92eaef // indirect
+	github.com/go-rod/rod v0.106.6 // indirect
 	github.com/joho/godotenv v1.4.0 // indirect
 	github.com/labstack/echo/v4 v4.7.2 // indirect
 	github.com/labstack/gommon v0.3.1 // indirect
@@ -17,6 +18,9 @@ require (
 	github.com/tebeka/selenium v0.9.9 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.1 // indirect
+	github.com/ysmood/goob v0.4.0 // indirect
+	github.com/ysmood/gson v0.7.1 // indirect
+	github.com/ysmood/leakless v0.7.0 // indirect
 	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5 // indirect
 	golang.org/x/net v0.0.0-20211015210444-4f30a5c0130f // indirect
 	golang.org/x/sys v0.0.0-20211103235746-7861aae1554b // indirect
