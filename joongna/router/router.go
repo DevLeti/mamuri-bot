@@ -8,7 +8,7 @@ import (
 
 const (
 	API        = "/api/v2"
-	APIJoongNa = API + "/JoongNa"
+	APIJoongNa = API + "/joongna"
 	APIKeyword = APIJoongNa + "/:keyword"
 )
 
