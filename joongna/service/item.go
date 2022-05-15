@@ -24,7 +24,10 @@ func GetItemByKeyword(keyword string) ([]model.Item, error) {
 	var items []model.Item
 	wg := sync.WaitGroup{}
 
-	itemsInfo := getItemsInfoByKeyword(keyword)
+	itemsInfo, err := getItemsInfoByKeyword(keyword)
+	if err != nil {
+		return nil, err
+	}
 
 	for _, itemInfo := range itemsInfo {
 		itemUrl := itemInfo.Link
@@ -34,7 +37,7 @@ func GetItemByKeyword(keyword string) ([]model.Item, error) {
 		wg.Add(1)
 		go func(itemUrl string) {
 			defer wg.Done()
-			err, item := crawlingNaverCafe(itemUrl)
+			item, err := crawlingNaverCafe(itemUrl)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -46,13 +49,13 @@ func GetItemByKeyword(keyword string) ([]model.Item, error) {
 	return items, nil
 }
 
-func getItemsInfoByKeyword(keyword string) []model.ApiResponseItem {
+func getItemsInfoByKeyword(keyword string) ([]model.ApiResponseItem, error) {
 	encText := url.QueryEscape("중고나라 " + keyword + " 판매중")
 	apiUrl := "https://openapi.naver.com/v1/search/cafearticle.json?query=" + encText + "&sort=sim"
 
 	req, err := http.NewRequest("GET", apiUrl, nil)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 	req.Header.Add("X-Naver-Client-Id", config.Cfg.Secret.CLIENTID)
 	req.Header.Add("X-Naver-Client-Secret", config.Cfg.Secret.CLIENTSECRET)
@@ -60,7 +63,7 @@ func getItemsInfoByKeyword(keyword string) []model.ApiResponseItem {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
@@ -75,16 +78,16 @@ func getItemsInfoByKeyword(keyword string) []model.ApiResponseItem {
 	if err != nil {
 		log.Fatal(err)
 	}
-	return apiResponse.Items
+	return apiResponse.Items, nil
 }
 
-func crawlingNaverCafe(cafeUrl string) (error, *model.Item) {
+func crawlingNaverCafe(cafeUrl string) (*model.Item, error) {
 	frame := rod.New().MustConnect().MustPage(cafeUrl).MustElement("iframe#cafe_main")
 	time.Sleep(time.Second * 2)
 	source := frame.MustFrame().MustHTML()
 	html, err := goquery.NewDocumentFromReader(bytes.NewReader([]byte(source)))
 	if err != nil {
-		return err, nil
+		return nil, err
 	}
 
 	title := html.Find("h3.title_text").Text()
@@ -108,7 +111,7 @@ func crawlingNaverCafe(cafeUrl string) (error, *model.Item) {
 	}
 	fmt.Println("crawling " + cafeUrl + " title: " + title)
 
-	return nil, &item
+	return &item, nil
 }
 
 func priceStringToInt(priceString string) int {
