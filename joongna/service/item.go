@@ -3,7 +3,6 @@ package service
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"joongna/config"
@@ -109,7 +108,6 @@ func crawlingNaverCafe(cafeUrl string) (*model.Item, error) {
 		ItemUrl:      cafeUrl,
 		ExtraInfo:    extraInfo,
 	}
-	fmt.Println("crawling " + cafeUrl + " title: " + title)
 
 	return &item, nil
 }
