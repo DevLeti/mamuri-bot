@@ -1,11 +1,17 @@
-FROM golang:1.17.3
+FROM golang:1.17.3-alpine AS builder
 
 WORKDIR /src
 COPY . /src
 
-RUN apt-get update
-RUN apt-get install -y libgconf-2-4 libatk1.0-0 libatk-bridge2.0-0 libgdk-pixbuf2.0-0 libgtk-3-0 libgbm-dev libnss3-dev libxss-dev libasound2
-RUN go build -o Joongna_api_server
+RUN go build -o joongna_api_server
+
+FROM alpine
+
+WORKDIR /src
+COPY --from=builder /src/joongna_api_server /src/joongna_api_server
+COPY --from=builder /src/config/.env /src/config/.env
+
+RUN apk add chromium
 
 EXPOSE 8080
-CMD ["./Joongna_api_server"]
+CMD ["./joongna_api_server"]
