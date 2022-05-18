@@ -17,6 +17,7 @@ import (
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/go-rod/rod"
+	"github.com/go-rod/rod/lib/launcher"
 )
 
 func GetItemByKeyword(keyword string) ([]model.Item, error) {
@@ -81,7 +82,9 @@ func getItemsInfoByKeyword(keyword string) ([]model.ApiResponseItem, error) {
 }
 
 func crawlingNaverCafe(cafeUrl string) (*model.Item, error) {
-	frame := rod.New().MustConnect().MustPage(cafeUrl).MustElement("iframe#cafe_main")
+	path, _ := launcher.LookPath()
+	u := launcher.New().Bin(path).MustLaunch()
+	frame := rod.New().ControlURL(u).MustConnect().MustPage(cafeUrl).MustElement("iframe#cafe_main")
 	time.Sleep(time.Second * 2)
 	source := frame.MustFrame().MustHTML()
 	html, err := goquery.NewDocumentFromReader(bytes.NewReader([]byte(source)))
