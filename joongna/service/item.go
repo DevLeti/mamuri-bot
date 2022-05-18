@@ -84,7 +84,16 @@ func getItemsInfoByKeyword(keyword string) ([]model.ApiResponseItem, error) {
 func crawlingNaverCafe(cafeUrl string) (*model.Item, error) {
 	path, _ := launcher.LookPath()
 	u := launcher.New().Bin(path).MustLaunch()
-	frame := rod.New().ControlURL(u).MustConnect().MustPage(cafeUrl).MustElement("iframe#cafe_main")
+
+	browser := rod.New().ControlURL(u).MustConnect()
+	defer func(browser *rod.Browser) {
+		err := browser.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(browser)
+
+	frame := browser.MustPage(cafeUrl).MustElement("iframe#cafe_main")
 	time.Sleep(time.Second * 2)
 	source := frame.MustFrame().MustHTML()
 	html, err := goquery.NewDocumentFromReader(bytes.NewReader([]byte(source)))
