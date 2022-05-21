@@ -12,47 +12,50 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/fedesog/webdriver"
+	"github.com/go-rod/rod"
+	"github.com/go-rod/rod/lib/launcher"
 )
 
 func GetItemByKeyword(keyword string) ([]model.Item, error) {
 	var items []model.Item
+	wg := sync.WaitGroup{}
 
-	itemsInfo := getItemsInfoByKeyword(keyword)
+	itemsInfo, err := getItemsInfoByKeyword(keyword)
+	if err != nil {
+		return nil, err
+	}
+
 	for _, itemInfo := range itemsInfo {
+		itemUrl := itemInfo.Link
 		if itemInfo.CafeName != "중고나라" {
 			continue
 		}
-		itemUrl := itemInfo.Link
-		sold, price, thumbnailUrl, extraInfo := crawlingNaverCafe(itemUrl)
-
-		if sold == "판매 완료" {
-			continue
-		}
-
-		item := model.Item{
-			Platform:     "중고나라",
-			Name:         itemInfo.Title,
-			Price:        price,
-			ThumbnailUrl: thumbnailUrl,
-			ItemUrl:      itemUrl,
-			ExtraInfo:    extraInfo,
-		}
-		items = append(items, item)
+		wg.Add(1)
+		go func(itemUrl string) {
+			defer wg.Done()
+			item, err := crawlingNaverCafe(itemUrl)
+			if err != nil {
+				log.Fatal(err)
+			}
+			items = append(items, *item)
+		}(itemUrl)
 	}
+	wg.Wait()
+
 	return items, nil
 }
 
-func getItemsInfoByKeyword(keyword string) []model.ApiResponseItem {
+func getItemsInfoByKeyword(keyword string) ([]model.ApiResponseItem, error) {
 	encText := url.QueryEscape("중고나라 " + keyword + " 판매중")
 	apiUrl := "https://openapi.naver.com/v1/search/cafearticle.json?query=" + encText + "&sort=sim"
 
 	req, err := http.NewRequest("GET", apiUrl, nil)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 	req.Header.Add("X-Naver-Client-Id", config.Cfg.Secret.CLIENTID)
 	req.Header.Add("X-Naver-Client-Secret", config.Cfg.Secret.CLIENTSECRET)
@@ -60,7 +63,7 @@ func getItemsInfoByKeyword(keyword string) []model.ApiResponseItem {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
@@ -75,51 +78,58 @@ func getItemsInfoByKeyword(keyword string) []model.ApiResponseItem {
 	if err != nil {
 		log.Fatal(err)
 	}
-	return apiResponse.Items
+	return apiResponse.Items, nil
 }
 
-func crawlingNaverCafe(cafeUrl string) (string, int, string, string) {
-	driver := webdriver.NewChromeDriver("./chromedriver")
-	err := driver.Start()
-	if err != nil {
-		log.Println(err)
-	}
-	desired := webdriver.Capabilities{"Platform": "Linux"}
-	required := webdriver.Capabilities{}
-	session, err := driver.NewSession(desired, required)
-	if err != nil {
-		log.Println(err)
-	}
-	err = session.Url(cafeUrl)
-	if err != nil {
-		log.Println(err)
-	}
-	time.Sleep(time.Second * 1)
-	err = session.FocusOnFrame("cafe_main")
-	if err != nil {
-		log.Fatal(err)
-	}
-	resp, err := session.Source()
+func crawlingNaverCafe(cafeUrl string) (*model.Item, error) {
+	path, _ := launcher.LookPath()
+	u := launcher.New().Bin(path).MustLaunch()
 
-	html, err := goquery.NewDocumentFromReader(bytes.NewReader([]byte(resp)))
+	browser := rod.New().ControlURL(u).MustConnect()
+	defer func(browser *rod.Browser) {
+		err := browser.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(browser)
+
+	frame := browser.MustPage(cafeUrl).MustElement("iframe#cafe_main")
+	time.Sleep(time.Second * 2)
+	source := frame.MustFrame().MustHTML()
+	html, err := goquery.NewDocumentFromReader(bytes.NewReader([]byte(source)))
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
+	title := html.Find("h3.title_text").Text()
 	sold := html.Find("div.sold_area").Text()
 	price := priceStringToInt(html.Find(".ProductPrice").Text())
 	thumbnailUrl, _ := html.Find("div.product_thumb img").Attr("src")
 	extraInfo := html.Find(".se-module-text").Text()
 
+	title = strings.TrimSpace(title)
 	sold = strings.TrimSpace(sold)
 	thumbnailUrl = strings.TrimSpace(thumbnailUrl)
 	extraInfo = strings.TrimSpace(extraInfo)
 
-	return sold, price, thumbnailUrl, extraInfo
+	item := model.Item{
+		Platform:     "중고나라",
+		Name:         title,
+		Price:        price,
+		ThumbnailUrl: thumbnailUrl,
+		ItemUrl:      cafeUrl,
+		ExtraInfo:    extraInfo,
+	}
+
+	return &item, nil
 }
 
 func priceStringToInt(priceString string) int {
 	strings.TrimSpace(priceString)
+
+	if priceString == "" {
+		return 0
+	}
 
 	priceString = strings.ReplaceAll(priceString, "원", "")
 	priceString = strings.ReplaceAll(priceString, ",", "")

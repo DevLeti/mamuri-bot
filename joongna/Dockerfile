@@ -1,25 +1,17 @@
-FROM golang:1.17.3
-
-ENV Xvfb :99
-ENV DISPLAY=:99
-ENV GO111MODULE=on
-
-RUN apt-get -y update
-RUN apt-get install -y wget xvfb gnupg
-
-RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
-RUN sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
-RUN apt-get -y update
-RUN apt-get install -y google-chrome-stable
-
-RUN apt-get install -yqq unzip
-RUN wget -O /tmp/chromedriver.zip http://chromedriver.storage.googleapis.com/`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE`/chromedriver_linux64.zip
-RUN unzip /tmp/chromedriver.zip chromedriver -d /usr/local/bin/
+FROM golang:1.17.3-alpine AS builder
 
 WORKDIR /src
 COPY . /src
 
-RUN go build -o Joongna_api_server
+RUN go build -o joongna_api_server
+
+FROM alpine
+
+WORKDIR /src
+COPY --from=builder /src/joongna_api_server /src/joongna_api_server
+COPY --from=builder /src/config/.env /src/config/.env
+
+RUN apk add chromium
 
 EXPOSE 8080
-CMD ["./Joongna_api_server"]
+CMD ["./joongna_api_server"]
