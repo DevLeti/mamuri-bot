@@ -11,10 +11,12 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
+	"sync"
 )
 
 func GetItemByKeyword(keyword string) ([]model.Item, error) {
 	var items []model.Item
+	wg := sync.WaitGroup{}
 
 	responseItems, err := getApiResponseItems(keyword)
 	if err != nil {
@@ -22,28 +24,33 @@ func GetItemByKeyword(keyword string) ([]model.Item, error) {
 	}
 
 	for _, responseItem := range responseItems {
-		extraInfo, err := getItemExtraInfo(responseItem.Pid)
-		if err != nil {
-			return nil, err
-		}
-		item := model.Item{
-			Platform:     "번개장터",
-			Name:         responseItem.Name,
-			Price:        priceStringToInt(responseItem.Price),
-			ThumbnailUrl: responseItem.ProductImage,
-			ItemUrl:      "https://m.bunjang.co.kr/products/" + responseItem.Pid,
-			ExtraInfo:    extraInfo,
-		}
+		wg.Add(1)
 
-		items = append(items, item)
+		go func(responseItem model.ApiResponseItem) {
+			defer wg.Done()
+			extraInfo, err := getItemExtraInfo(responseItem.Pid)
+			if err != nil {
+				log.Fatal(err)
+			}
+			item := model.Item{
+				Platform:     "번개장터",
+				Name:         responseItem.Name,
+				Price:        priceStringToInt(responseItem.Price),
+				ThumbnailUrl: responseItem.ProductImage,
+				ItemUrl:      "https://m.bunjang.co.kr/products/" + responseItem.Pid,
+				ExtraInfo:    extraInfo,
+			}
+			items = append(items, item)
+		}(responseItem)
 	}
+	wg.Wait()
 
 	return items, nil
 }
 
 func getApiResponseItems(keyword string) ([]model.ApiResponseItem, error) {
 	encText := url.QueryEscape(keyword)
-	apiUrl := fmt.Sprintf("https://api.bunjang.co.kr/api/1/find_v2.json?q=%s&order=score", encText)
+	apiUrl := fmt.Sprintf("https://api.bunjang.co.kr/api/1/find_v2.json?q=%s&order=score&n=6", encText)
 
 	response, err := getResponse(apiUrl)
 	if err != nil {
