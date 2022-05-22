@@ -29,4 +29,4 @@ services:
     ports:
       - '13060:3306'
     env_file:
-      - "./mysql_init/.env"
+      - "./database/mysql_init/.env"
