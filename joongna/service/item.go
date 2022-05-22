@@ -1,8 +1,8 @@
 package service
 
 import (
-	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"joongna/config"
@@ -13,36 +13,35 @@ import (
 	"strconv"
 	"strings"
 	"sync"
-	"time"
-
-	"github.com/PuerkitoBio/goquery"
-	"github.com/go-rod/rod"
-	"github.com/go-rod/rod/lib/launcher"
 )
 
 func GetItemByKeyword(keyword string) ([]model.Item, error) {
 	var items []model.Item
 	wg := sync.WaitGroup{}
 
-	itemsInfo, err := getItemsInfoByKeyword(keyword)
+	responseItems, err := getItemsInfoByKeyword(keyword)
 	if err != nil {
 		return nil, err
 	}
 
-	for _, itemInfo := range itemsInfo {
-		itemUrl := itemInfo.Link
-		if itemInfo.CafeName != "중고나라" {
-			continue
-		}
+	for _, responseItem := range responseItems {
 		wg.Add(1)
-		go func(itemUrl string) {
+
+		go func(responseItem model.ApiResponseItem) {
 			defer wg.Done()
-			item, err := crawlingNaverCafe(itemUrl)
 			if err != nil {
 				log.Fatal(err)
 			}
-			items = append(items, *item)
-		}(itemUrl)
+			item := model.Item{
+				Platform:     "중고나라",
+				Name:         responseItem.Title,
+				Price:        priceStringToInt(responseItem.ProductSale.Cost),
+				ThumbnailUrl: responseItem.ThumbnailUrl,
+				ItemUrl:      fmt.Sprintf("https://m.cafe.naver.com/ca-fe/web/cafes/10050146/articles/%d", responseItem.ArticleId),
+				ExtraInfo:    responseItem.ExtraInfo,
+			}
+			items = append(items, item)
+		}(responseItem)
 	}
 	wg.Wait()
 
@@ -50,8 +49,8 @@ func GetItemByKeyword(keyword string) ([]model.Item, error) {
 }
 
 func getItemsInfoByKeyword(keyword string) ([]model.ApiResponseItem, error) {
-	encText := url.QueryEscape("중고나라 " + keyword + " 판매중")
-	apiUrl := "https://openapi.naver.com/v1/search/cafearticle.json?query=" + encText + "&sort=sim"
+	encText := url.QueryEscape(keyword)
+	apiUrl := fmt.Sprintf("https://apis.naver.com/cafe-web/cafe-mobile/CafeMobileWebArticleSearchListV3?cafeId=10050146&query=%s&searchBy=0&sortBy=sim&page=1&perPage=10&adUnit=MW_CAFE_BOARD", encText)
 
 	req, err := http.NewRequest("GET", apiUrl, nil)
 	if err != nil {
@@ -59,6 +58,8 @@ func getItemsInfoByKeyword(keyword string) ([]model.ApiResponseItem, error) {
 	}
 	req.Header.Add("X-Naver-Client-Id", config.Cfg.Secret.CLIENTID)
 	req.Header.Add("X-Naver-Client-Secret", config.Cfg.Secret.CLIENTSECRET)
+	req.Header.Add("Cookie", config.Cfg.Header.Cookie)
+	req.Header.Add("User-agent", config.Cfg.Header.UserAgent)
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -73,55 +74,26 @@ func getItemsInfoByKeyword(keyword string) ([]model.ApiResponseItem, error) {
 	}(resp.Body)
 
 	response, _ := ioutil.ReadAll(resp.Body)
-	var apiResponse model.ApiResponse
-	err = json.Unmarshal(response, &apiResponse)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return apiResponse.Items, nil
-}
 
-func crawlingNaverCafe(cafeUrl string) (*model.Item, error) {
-	path, _ := launcher.LookPath()
-	u := launcher.New().Bin(path).MustLaunch()
-
-	browser := rod.New().ControlURL(u).MustConnect()
-	defer func(browser *rod.Browser) {
-		err := browser.Close()
-		if err != nil {
-			log.Fatal(err)
-		}
-	}(browser)
-
-	frame := browser.MustPage(cafeUrl).MustElement("iframe#cafe_main")
-	time.Sleep(time.Second * 2)
-	source := frame.MustFrame().MustHTML()
-	html, err := goquery.NewDocumentFromReader(bytes.NewReader([]byte(source)))
+	var apiResult map[string]interface{}
+	err = json.Unmarshal(response, &apiResult)
 	if err != nil {
 		return nil, err
 	}
 
-	title := html.Find("h3.title_text").Text()
-	sold := html.Find("div.sold_area").Text()
-	price := priceStringToInt(html.Find(".ProductPrice").Text())
-	thumbnailUrl, _ := html.Find("div.product_thumb img").Attr("src")
-	extraInfo := html.Find(".se-module-text").Text()
-
-	title = strings.TrimSpace(title)
-	sold = strings.TrimSpace(sold)
-	thumbnailUrl = strings.TrimSpace(thumbnailUrl)
-	extraInfo = strings.TrimSpace(extraInfo)
-
-	item := model.Item{
-		Platform:     "중고나라",
-		Name:         title,
-		Price:        price,
-		ThumbnailUrl: thumbnailUrl,
-		ItemUrl:      cafeUrl,
-		ExtraInfo:    extraInfo,
+	result := apiResult["message"].(map[string]interface{})["result"]
+	resultJson, err := json.Marshal(result)
+	if err != nil {
+		return nil, err
 	}
 
-	return &item, nil
+	var apiResponse model.ApiResponse
+	err = json.Unmarshal(resultJson, &apiResponse)
+	if err != nil {
+		return nil, err
+	}
+
+	return apiResponse.Items, nil
 }
 
 func priceStringToInt(priceString string) int {
