@@ -1,13 +1,13 @@
 module.exports = (sequelize, DataTypes) => {
 
-    return sequelize.define("user", {
+    return sequelize.define("keyword", {
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey: true
         },
-        userId: {
-            type: DataTypes.INTEGER,
+        keyword: {
+            type: DataTypes.STRING,
             allowNull: false
         }
     })
