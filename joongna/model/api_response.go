@@ -1,16 +1,21 @@
 package model
 
 type ApiResponse struct {
-	LastBuildDate string            `json:"lastBuildDate"`
-	Total         uint              `json:"total"`
-	Start         uint              `json:"start"`
-	Display       uint              `json:"display"`
-	Items         []ApiResponseItem `json:"items"`
+	CafeId       int               `json:"cafeId"`
+	ArticelCount int               `json:"articleCount"`
+	Query        string            `json:"query"`
+	Items        []ApiResponseItem `json:"articleList"`
 }
 
 type ApiResponseItem struct {
-	Title       string `json:"title"`
-	Link        string `json:"link"`
-	Description string `json:"description"`
-	CafeName    string `json:"cafename"`
+	ArticleId    int                 `json:"articleId"`
+	Title        string              `json:"subject"`
+	ExtraInfo    string              `json:"summary"`
+	ThumbnailUrl string              `json:"thumbnailImageUrl"`
+	ProductSale  ApiResponseItemSale `json:"productSale"`
+}
+
+type ApiResponseItemSale struct {
+	SaleStatus string `json:"saleStatue"`
+	Cost       string `json:"cost"`
 }

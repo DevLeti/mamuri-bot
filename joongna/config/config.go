@@ -12,6 +12,11 @@ type Config struct {
 		CLIENTID     string `env:"SECRET.CLIENTID"`
 		CLIENTSECRET string `env:"SECRET.CLIENTSECRET"`
 	}
+
+	Header struct {
+		Cookie    string `env:"HEADER.COOKIE"`
+		UserAgent string `env:"HEADER.USERAGENT"`
+	}
 }
 
 var Cfg *Config
