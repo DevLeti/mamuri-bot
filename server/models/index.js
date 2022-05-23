@@ -36,8 +36,9 @@ db.Sequelize = Sequelize;
 
 db.user = require("./user")(sequelize, Sequelize);
 db.keyword = require("./keyword")(sequelize, Sequelize);
+db.userKeyword = sequelize.define('user_keywords');
 
-db.user.belongsToMany(db.keyword, {through: 'user_keyword'});
-db.keyword.belongsToMany(db.user, {through: 'user_keyword'});
+db.user.belongsToMany(db.keyword, {through: db.userKeyword});
+db.keyword.belongsToMany(db.user, {through: db.userKeyword});
 
 module.exports = db;

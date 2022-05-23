@@ -4,11 +4,13 @@ const setFlexMessage = require("./apis/setFlexMessage");
 const fs = require("fs");
 
 const { sequelize } = require('./models')
+const database = require("./apis/database");
 
 // Initialize DB connection
 sequelize.sync({ force: false })
     .then(() => {
         console.log('database connection complete');
+        database.addKeyword("rtx3080", "phobyjun")
     })
     .catch((err) => {
         console.log('database connection failed');
