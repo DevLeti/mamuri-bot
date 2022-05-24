@@ -72,3 +72,17 @@ database.getKeywordsByUserId = async function(userId) {
 
     return result
 }
+
+database.getAllUsers = async function() {
+
+    const users = await User.findAll({
+        raw: true
+    })
+
+    let result = []
+    for (let i = 0; i < users.length; i++) {
+        result.push(users[i].userId)
+    }
+
+    return result
+}
