@@ -2,7 +2,7 @@ const express = require("express");
 const line = require("@line/bot-sdk");
 const fs = require("fs");
 const { handleEvent } = require("./chatbot/index");
-const { config } = require("./chatbot/index");
+// const { config } = require("./chatbot/index");
 const { sequelize } = require("./models");
 const database = require("./apis/database");
 
