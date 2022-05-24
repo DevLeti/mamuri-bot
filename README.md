@@ -1,8 +1,7 @@
-
-
-<p align="center"><img src="./readme_logo.png" width="20%" height="20%"></p>
-
 ![node-16.14.2](https://img.shields.io/badge/Node-16.14.2-green?style=for-the-badge)
+
+<div align="center"><img src="./readme_logo.png" width="20%" height="20%"></div>
+
 ## 매무리 봇 (Mamuri-bot)
 
 사용자에게 입력받은 키워드를 통해 3곳의 중고매물 사이트(중고나라, 당근마켓, 번개장터)에 매물을 감지, 알림을 전송하는 봇입니다.
