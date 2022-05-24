@@ -28,7 +28,30 @@ database.addKeyword = async function(keyword, userId) {
     })
 }
 
+database.deleteKeyword = async function(userId, keyword) {
+
+    const u = await User.findOrCreate({
+        where: {
+            userId: userId
+        }
+    })
+
+    const k = await Keyword.findOrCreate({
+        where: {
+            keyword: keyword
+        }
+    })
+
+    await UserKeyword.destroy({
+        where: {
+            userId: u[0].id,
+            keywordId: k[0].id
+        }
+    })
+}
+
 database.getKeywordsByUserId = async function(userId) {
+
     const keywords = await Keyword.findAll({
         attributes: ['keyword'],
         where: {
