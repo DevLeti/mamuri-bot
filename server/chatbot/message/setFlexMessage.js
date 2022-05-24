@@ -2,14 +2,21 @@ function priceToString(price) {
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-function setFlexMessage(platform, name, price, thumbnailUrl, itemUrl) {
+function setFlexMessage(
+  platform,
+  name,
+  price,
+  thumbnailUrl,
+  itemUrl,
+  extraInfo
+) {
   let koreanPlatformName = "";
-  if (platform === "daangn") {
-    koreanPlatformName = "당근";
-  } else if (platform === "joongna") {
+  if (platform === "daangn" || platform === "당근마켓") {
+    koreanPlatformName = "당근마켓";
+  } else if (platform === "joongna" || platform === "중고나라") {
     koreanPlatformName = "중고나라";
-  } else if (platform === "bunjang") {
-    koreanPlatformName = "번개나라";
+  } else if (platform === "bunjang" || platform === "번개장터") {
+    koreanPlatformName = "번개장터";
   } else {
     koreanPlatformName = "Unknown";
   }
@@ -120,6 +127,28 @@ function setFlexMessage(platform, name, price, thumbnailUrl, itemUrl) {
                 {
                   type: "text",
                   text: priceToString(price * 1) + "원",
+                  wrap: true,
+                  color: "#666666",
+                  size: "sm",
+                  flex: 5,
+                },
+              ],
+            },
+            {
+              type: "box",
+              layout: "baseline",
+              spacing: "sm",
+              contents: [
+                {
+                  type: "text",
+                  text: "정보",
+                  color: "#aaaaaa",
+                  size: "sm",
+                  flex: 1,
+                },
+                {
+                  type: "text",
+                  text: extraInfo,
                   wrap: true,
                   color: "#666666",
                   size: "sm",
