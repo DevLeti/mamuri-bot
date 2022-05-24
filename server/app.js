@@ -15,6 +15,7 @@ sequelize.sync({ force: false })
         database.deleteKeyword("phobyjun", "rtx3080")
         database.getAllUsers()
         database.getUsersByKeyword("rtx3060")
+        database.getAllKeywords()
     })
     .catch((err) => {
         console.log('database connection failed');

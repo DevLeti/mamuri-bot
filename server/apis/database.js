@@ -109,3 +109,18 @@ database.getAllUsers = async function() {
 
     return result
 }
+
+database.getAllKeywords = async function() {
+
+    const keywords = await Keyword.findAll({
+        raw: true
+    })
+
+    let result = []
+    for (let i = 0; i< keywords.length; i++) {
+        result.push(keywords[i].keyword)
+    }
+
+    console.log(result)
+    return result
+}
