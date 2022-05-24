@@ -9,6 +9,10 @@
 - 봇을 사용해 키워드를 입력 받습니다.
 - 주기적 크롤링을 통해 새로운 매물을 감지해 알림을 전송합니다.
 
+### Project Architecture
+
+![project_structure](./project_structure.png)
+
 ### Built With
 
 - [Node.js](https://nodejs.org/ko/)
