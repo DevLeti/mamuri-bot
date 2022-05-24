@@ -27,3 +27,25 @@ database.addKeyword = async function(keyword, userId) {
         }
     })
 }
+
+database.getKeywordsByUserId = async function(userId) {
+    const keywords = await Keyword.findAll({
+        attributes: ['keyword'],
+        where: {
+            '$user.userId$': userId
+        },
+        include: [{
+            attributes: [],
+            model: User,
+            as: 'user'
+        }],
+        raw: true
+    })
+
+    let result = []
+    for (let i = 0; i < keywords.length; i++) {
+        result.push(keywords[i].keyword)
+    }
+
+    return result
+}

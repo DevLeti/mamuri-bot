@@ -10,7 +10,8 @@ const database = require("./apis/database");
 sequelize.sync({ force: false })
     .then(() => {
         console.log('database connection complete');
-        database.addKeyword("rtx3080", "phobyjun")
+        database.addKeyword("rtx3060", "junseok")
+        database.getKeywordsByUserId("junseok")
     })
     .catch((err) => {
         console.log('database connection failed');
