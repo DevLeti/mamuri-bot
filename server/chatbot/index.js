@@ -77,7 +77,10 @@ function handleEvent(event) {
       return Promise.resolve(
         client.replyMessage(event.replyToken, {
           type: "text",
-          text: "매물이 등록되었습니다!\n등록된 매물: " + event.message.text,
+          text: `매물이 등록되었습니다!\n등록된 매물: ${event.message.text}`,
+        }),
+        marketMultiSearch(event.message.text).then((res) => {
+          client.pushMessage(event.source.userId, setCarouselMessage(res));
         })
       );
     }
