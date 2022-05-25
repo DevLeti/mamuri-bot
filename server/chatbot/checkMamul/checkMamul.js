@@ -10,7 +10,7 @@ const db = require("../../apis/database");
 // database.getAllUsers = async function()
 // database.getAllKeywords = async function()
 
-const checkMamul = (client) => {
+const multiCheckMamul = (client) => {
   db.getAllKeywords().then((keywords) => {
     for (let i = 0, pending = Promise.resolve(); i < keywords.length; i++) {
       pending = db.getUsersByKeyword(keywords[i]).then((userIds) => {
@@ -22,4 +22,14 @@ const checkMamul = (client) => {
   });
 };
 
-module.exports = { checkMamul };
+const checkMamul = (client, userId) => {
+  db.getKeywordsByUserId(userId).then((keywords) => {
+    for (let i = 0, pending = Promise.resolve(); i< keywords.length; i++) {
+      pending = marketMultiSearch(keywords[i]).then((res) => {
+        client.pushMessage(userId, setCarouselMessage(res));
+      });
+    };
+  });
+};
+
+module.exports = { multiCheckMamul, checkMamul };

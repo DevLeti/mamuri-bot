@@ -18,7 +18,7 @@ const fs = require("fs");
 // Cron for Mamul Notification
 const schedule = require("node-schedule");
 const job = schedule.scheduleJob("0 */1 * * *", () => {
-  checkMamul(client);
+    multiCheckMamul(client);
 });
 
 // Database APIs
@@ -39,7 +39,8 @@ const config = {
 };
 
 // Cron for Mamul Notification
-const { checkMamul } = require("./checkMamul/checkMamul");
+const { multiCheckMamul, checkMamul } = require("./checkMamul/checkMamul");
+
 
 // Line chat bot client & event
 const client = new line.Client(config);
@@ -71,18 +72,7 @@ function handleEvent(event) {
         }
       } else if (event.postback.data == "checkItems") {
         return Promise.resolve(
-          client.replyMessage(event.replyToken, {
-            type: "flex",
-            altText: "등록된 매물",
-            contents: setFlexMessage(
-              "daangn",
-              "RTX 3080",
-              "1000000",
-              "https://dnvefa72aowie.cloudfront.net/origin/article/202205/94cdd237258671d5806a70f64ab2b3c7dcd790da0384b394ef5809fe10c08ced.webp?q=95&s=1440x1440&t=inside",
-              "https://www.daangn.com/articles/403755360",
-              "채굴X, 흡연X, 반려동물X 입니다.\n직거래 희망하며, 쿨거래시 네고 1만원 가능합니다."
-            ),
-          })
+            checkMamul(client, event.source.userId),
         );
       }
     }
