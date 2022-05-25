@@ -69,7 +69,7 @@ function handleEvent(event) {
             })
           );
         }
-      } else if (event.postback.data == "check") {
+      } else if (event.postback.data == "checkItems") {
         return Promise.resolve(
           client.replyMessage(event.replyToken, {
             type: "flex",
@@ -165,52 +165,83 @@ module.exports = { handleEvent, config };
 
 /*리치메뉴 설정*/
 // let richMenu = {
-//   size: {
-//     width: 2500,
-//     height: 843,
-//   },
-//   selected: false,
-//   name: "Nice richmenu",
-//   chatBarText: "Tap to open",
-//   areas: [
-//     {
-//       bounds: {
-//         x: 0,
-//         y: 0,
-//         width: 1250,
-//         height: 843,
-//       },
-//       action: {
-//         type: "postback",
-//         label: "new",
-//         data: "new",
-//         displayText: "키워드 등록",
-//         inputOption: "openKeyboard",
-//         fillInText: "",
-//       },
+//     size: {
+//         width: 2006,
+//         height: 827,
 //     },
-//     {
-//       bounds: {
-//         x: 1250,
-//         y: 0,
-//         width: 1250,
-//         height: 843,
-//       },
-//       action: {
-//         type: "postback",
-//         label: "check",
-//         data: "check",
-//         displayText: "최신 매물 확인",
-//         inputOption: "openKeyboard",
-//         fillInText: "",
-//       },
-//     },
-//   ],
+//     selected: false,
+//     name: "Real richMenu",
+//     chatBarText: "메뉴 열기",
+//     areas: [
+//         {
+//             bounds: {
+//                 x: 0,
+//                 y: 0,
+//                 width: 1003,
+//                 height: 413,
+//             },
+//             action: {
+//                 type: "postback",
+//                 label: "new",
+//                 data: "new",
+//                 displayText: "키워드 추가",
+//                 inputOption: "openKeyboard",
+//                 fillInText: "",
+//             },
+//         },
+//         {
+//             bounds: {
+//                 x: 1003,
+//                 y: 0,
+//                 width: 1003,
+//                 height: 413,
+//             },
+//             action: {
+//                 type: "postback",
+//                 label: "check",
+//                 data: "check",
+//                 displayText: "키워드 삭제",
+//                 inputOption: "openKeyboard",
+//                 fillInText: "",
+//             },
+//         },
+//         {
+//             bounds: {
+//                 x: 0,
+//                 y: 413,
+//                 width: 1003,
+//                 height: 414,
+//             },
+//             action: {
+//                 type: "postback",
+//                 label: "checkKeyword",
+//                 data: "checkKeyword",
+//                 displayText: "키워드 확인",
+//             },
+//         },
+//         {
+//             bounds: {
+//                 x: 1003,
+//                 y: 413,
+//                 width: 1003,
+//                 height: 414,
+//             },
+//             action: {
+//                 type: "postback",
+//                 label: "checkItems",
+//                 data: "checkItems",
+//                 displayText: "매물 즉시 검색",
+//             },
+//         },
+//     ],
 // };
-//// 등록
-// client.createRichMenu(richMenu).then((richMenuId) => console.log(richMenuId));
+
+// 등록
+// client.createRichMenu(richMenu).then((richMenuId) => {
+//     console.log(richMenuId)
+// });
 // client.setRichMenuImage(
-//   "richmenu-183eff606f059b8244f0a625b54bddf1",
-//   fs.createReadStream("./static/img/richMenu.jpg")
-// );
-// client.setDefaultRichMenu("richmenu-183eff606f059b8244f0a625b54bddf1");
+//     "richmenu-754798c14b181701c64cd7f0d37f52ec",
+//         fs.createReadStream("./static/img/richMenu.png")
+//     );
+//client.setDefaultRichMenu("richmenu-754798c14b181701c64cd7f0d37f52ec");
