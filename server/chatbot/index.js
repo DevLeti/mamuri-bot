@@ -54,7 +54,7 @@ function handleEvent(event) {
               "1000000",
               "https://dnvefa72aowie.cloudfront.net/origin/article/202205/94cdd237258671d5806a70f64ab2b3c7dcd790da0384b394ef5809fe10c08ced.webp?q=95&s=1440x1440&t=inside",
               "https://www.daangn.com/articles/403755360",
-              "test설명"
+              "채굴X, 흡연X, 반려동물X 입니다.\n직거래 희망하며, 쿨거래시 네고 1만원 가능합니다."
             ),
           })
         );
