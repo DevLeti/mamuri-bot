@@ -1,7 +1,9 @@
+// Line chatbot + Message generate functions
 const line = require("@line/bot-sdk");
 const setFlexMessage = require("./message/setFlexMessage");
 const setCarouselMessage = require("./message/setCarouselMessage");
-const fs = require("fs");
+
+// Market Search
 const { daangnSingleSearch } = require("./search/daangnSearch");
 const { daangnMultiSearch } = require("./search/daangnSearch");
 const { joongnaSingleSearch } = require("./search/joongnaSearch");
@@ -10,6 +12,20 @@ const { bunjangSingleSearch } = require("./search/bunjangSearch");
 const { bunjangMultiSearch } = require("./search/bunjangSearch");
 const { marketMultiSearch } = require("./search/marketSearch");
 
+// File search - Will be deleted (Unused)
+const fs = require("fs");
+
+// Database APIs
+const db = require("../apis/database");
+// API List
+// database.addKeyword = async function(keyword, userId)
+// database.deleteKeyword = async function(userId, keyword)
+// database.getKeywordsByUserId = async function(userId)
+// database.getUsersByKeyword = async function(keyword)
+// database.getAllUsers = async function()
+// database.getAllKeywords = async function()
+
+// Import credentials for Line chatbot
 require("dotenv").config({ path: __dirname + "/../.env" });
 const config = {
   channelAccessToken: process.env.channelAccessToken,
@@ -28,7 +44,7 @@ function handleEvent(event) {
         var found = waitNewMamulList.indexOf(event.source.userId);
         if (found == -1) {
           waitNewMamulList.push(event.source.userId);
-          console.log(waitNewMamulList);
+          console.log(`waitNewMamulList Changed : ${waitNewMamulList}`);
           return Promise.resolve(
             client.replyMessage(event.replyToken, {
               type: "text",
@@ -75,6 +91,7 @@ function handleEvent(event) {
       waitNewMamulList.splice(found, 1);
       console.log(waitNewMamulList[found]);
       return Promise.resolve(
+        db.addKeyword(event.message.text, event.source.userId),
         client.replyMessage(event.replyToken, {
           type: "text",
           text: `매물이 등록되었습니다!\n등록된 매물: ${event.message.text}`,
