@@ -10,12 +10,6 @@ sequelize
   .sync({ force: false })
   .then(() => {
     console.log("database connection complete");
-    database.addKeyword("rtx3060", "junseok");
-    database.getKeywordsByUserId("junseok");
-    database.deleteKeyword("phobyjun", "rtx3080");
-    database.getAllUsers();
-    database.getUsersByKeyword("rtx3060");
-    database.getAllKeywords();
   })
   .catch((err) => {
     console.log("database connection failed");

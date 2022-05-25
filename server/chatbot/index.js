@@ -15,6 +15,12 @@ const { marketMultiSearch } = require("./search/marketSearch");
 // File search - Will be deleted (Unused)
 const fs = require("fs");
 
+// Cron for Mamul Notification
+const schedule = require("node-schedule");
+const job = schedule.scheduleJob("0 */1 * * *", () => {
+  checkMamul(client);
+});
+
 // Database APIs
 const db = require("../apis/database");
 // API List
@@ -32,6 +38,10 @@ const config = {
   channelSecret: process.env.channelSecret,
 };
 
+// Cron for Mamul Notification
+const { checkMamul } = require("./checkMamul/checkMamul");
+
+// Line chat bot client & event
 const client = new line.Client(config);
 
 let waitNewMamulList = []; // 매물 키워드 입력 기다리는 목록
