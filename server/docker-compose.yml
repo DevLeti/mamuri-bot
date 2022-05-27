@@ -8,7 +8,7 @@ services:
     ports:
       - '13060:3306'
     env_file:
-      - "./database/mysql_init/.env"
+      - "../database/mysql_init/.env"
     volumes:
       - "/usr/mysql/data:/var/lib/mysql"
 
@@ -39,11 +39,3 @@ services:
     container_name: bunjang-api-server
     ports:
       - '18082:8080'
-
-  ngrok:
-    image: mamuri-ngrok
-    container_name: mamuri-ngrok
-    env_file:
-      - "ngrok/ngrok.yml"
-    ports:
-      - '4040:4040'

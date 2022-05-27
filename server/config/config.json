@@ -3,7 +3,8 @@
     "username": "root",
     "password": "mamuri",
     "database": "mamuri_db",
-    "host": "127.0.0.1",
+    "host": "mamuri-db",
+    "port": "3306",
     "dialect": "mysql"
   },
   "test": {
