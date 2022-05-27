@@ -1,7 +1,6 @@
 function setKeywordsFlexMessage(keywords) {
     let flexMessage = {
         type: "bubble",
-        hero: {},
         body: {
             type: "box",
             layout: "vertical",
@@ -32,11 +31,6 @@ function setKeywordsFlexMessage(keywords) {
                 }
             ]
         },
-        styles: {
-            footer: {
-                separator: "true"
-            }
-        }
     };
 
     for (let i = 0; i < keywords.length; i++) {
@@ -44,7 +38,11 @@ function setKeywordsFlexMessage(keywords) {
         flexMessage.body.contents[3].contents.push(textbox);
     }
 
-    return flexMessage
+    return {
+        type: "flex",
+        altText: "키워드 조회 오류",
+        contents: flexMessage
+    }
 }
 
 function createKeywordTextBox(keyword) {

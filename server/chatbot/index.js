@@ -40,7 +40,8 @@ const config = {
 };
 
 // Cron for Mamul Notification
-const { multiCheckMamul, checkMamul } = require("./checkMamul/checkMamul");
+const { multiCheckMamul, checkMamul } = require("./check/checkMamul");
+const { checkKeywords } = require("./check/checkKeywords")
 
 
 // Line chat bot client & event
@@ -90,7 +91,7 @@ function handleEvent(event) {
           }
       } else if (event.postback.data == "checkKeywords") {
           return Promise.resolve(
-              console.log("키워드 확인")
+              checkKeywords(client, event)
           )
       }
     }
