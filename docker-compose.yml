@@ -1,6 +1,17 @@
 version: '3'
 
 services:
+  db:
+    image: mamuri-db
+    restart: always
+    container_name: mamuri-db-container
+    ports:
+      - '13060:3306'
+    env_file:
+      - "./database/mysql_init/.env"
+    volumes:
+      - "/usr/mysql/data:/var/lib/mysql"
+
   daangn_api:
     image: daangn-api-server
     restart: always
@@ -21,12 +32,3 @@ services:
     container_name: bunjang-api-server-container
     ports:
       - '18082:8080'
-
-  db:
-    image: mamuri-db
-    restart: always
-    container_name: mamuri-db-container
-    ports:
-      - '13060:3306'
-    env_file:
-      - "./database/mysql_init/.env"
