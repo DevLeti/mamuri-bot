@@ -4,6 +4,7 @@
     "password": "mamuri",
     "database": "mamuri_db",
     "host": "127.0.0.1",
+    "port": "13060",
     "dialect": "mysql"
   },
   "test": {
