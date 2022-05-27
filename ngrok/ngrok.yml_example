@@ -1,0 +1,6 @@
+authtoken: {YOUR_NGROK_AUTO_TOKEN}
+version: 2
+tunnels:
+  mamuri:
+    proto: http
+    addr: mamuri-server:8080

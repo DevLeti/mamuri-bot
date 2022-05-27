@@ -39,3 +39,11 @@ services:
     container_name: bunjang-api-server
     ports:
       - '18082:8080'
+
+  ngrok:
+    image: mamuri-ngrok
+    container_name: mamuri-ngrok
+    env_file:
+      - "ngrok/ngrok.yml"
+    ports:
+      - '4040:4040'
