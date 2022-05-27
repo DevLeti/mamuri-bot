@@ -46,14 +46,15 @@ const { multiCheckMamul, checkMamul } = require("./checkMamul/checkMamul");
 const client = new line.Client(config);
 
 let waitNewMamulList = []; // 매물 키워드 입력 기다리는 목록
+let waitDeleteMamulList = []; // 매물 삭제 키워드 입력 기다리는 목록
 
 function handleEvent(event) {
   if (event.type !== "message" || event.message.type !== "text") {
     console.log(event);
     if (event.type == "postback") {
       if (event.postback.data == "newKeyword") {
-        var found = waitNewMamulList.indexOf(event.source.userId);
-        if (found == -1) {
+        var foundNew = waitNewMamulList.indexOf(event.source.userId);
+        if (foundNew == -1) {
           waitNewMamulList.push(event.source.userId);
           console.log(`waitNewMamulList Changed : ${waitNewMamulList}`);
           return Promise.resolve(
@@ -75,9 +76,17 @@ function handleEvent(event) {
             checkMamul(client, event.source.userId),
         );
       } else if (event.postback.data == "deleteKeyword") {
-          return Promise.resolve(
-              console.log("키워드 삭제")
-          )
+          var foundDelete = waitDeleteMamulList.indexOf(event.source.userId);
+          if (foundDelete == -1) {
+              waitDeleteMamulList.push(event.source.userId);
+              console.log(`waitDeleteMamulList Changed : ${waitDeleteMamulList}`);
+              return Promise.resolve(
+                  client.replyMessage(event.replyToken, {
+                      type: "text",
+                      text: "삭제할 매물 키워드를 알려주세요!",
+                  })
+              );
+          }
       } else if (event.postback.data == "checkKeywords") {
           return Promise.resolve(
               console.log("키워드 확인")
@@ -87,17 +96,11 @@ function handleEvent(event) {
     return Promise.resolve(null);
   } else {
     console.log(event);
-    var found = waitNewMamulList.indexOf(event.source.userId);
-    if (found == -1) {
-      return Promise.resolve(
-        marketMultiSearch(event.message.text).then((res) => {
-          client.pushMessage(event.source.userId, setCarouselMessage(res));
-        })
-      );
-    } else {
+    var foundNew = waitNewMamulList.indexOf(event.source.userId);
+    if (foundNew != -1) {
       // TODO: 서버에 키워드 등록하는 api
-      waitNewMamulList.splice(found, 1);
-      console.log(waitNewMamulList[found]);
+      waitNewMamulList.splice(foundNew, 1);
+      console.log(waitNewMamulList[foundNew]);
       return Promise.resolve(
         db.addKeyword(event.message.text, event.source.userId),
         client.replyMessage(event.replyToken, {
@@ -108,6 +111,19 @@ function handleEvent(event) {
           client.pushMessage(event.source.userId, setCarouselMessage(res));
         })
       );
+    }
+
+    var foundDelete = waitDeleteMamulList.indexOf(event.source.userId);
+    if (foundDelete != -1) {
+        waitDeleteMamulList.splice(foundDelete, 1);
+        console.log(waitDeleteMamulList[foundDelete]);
+        return Promise.resolve(
+            db.deleteKeyword(event.source.userId, event.message.text),
+            client.replyMessage(event.replyToken, {
+                type: "text",
+                text: `매물이 삭제되었습니다!\n삭제된 매물: ${event.message.text}`,
+            })
+        )
     }
   }
 }
