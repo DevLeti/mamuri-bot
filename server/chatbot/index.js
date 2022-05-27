@@ -51,7 +51,7 @@ function handleEvent(event) {
   if (event.type !== "message" || event.message.type !== "text") {
     console.log(event);
     if (event.type == "postback") {
-      if (event.postback.data == "new") {
+      if (event.postback.data == "newKeyword") {
         var found = waitNewMamulList.indexOf(event.source.userId);
         if (found == -1) {
           waitNewMamulList.push(event.source.userId);
@@ -74,6 +74,14 @@ function handleEvent(event) {
         return Promise.resolve(
             checkMamul(client, event.source.userId),
         );
+      } else if (event.postback.data == "deleteKeyword") {
+          return Promise.resolve(
+              console.log("키워드 삭제")
+          )
+      } else if (event.postback.data == "checkKeywords") {
+          return Promise.resolve(
+              console.log("키워드 확인")
+          )
       }
     }
     return Promise.resolve(null);
@@ -172,8 +180,8 @@ module.exports = { handleEvent, config };
 //             },
 //             action: {
 //                 type: "postback",
-//                 label: "new",
-//                 data: "new",
+//                 label: "newKeyword",
+//                 data: "newKeyword",
 //                 displayText: "키워드 추가",
 //                 inputOption: "openKeyboard",
 //                 fillInText: "",
@@ -188,8 +196,8 @@ module.exports = { handleEvent, config };
 //             },
 //             action: {
 //                 type: "postback",
-//                 label: "check",
-//                 data: "check",
+//                 label: "deleteKeyword",
+//                 data: "deleteKeyword",
 //                 displayText: "키워드 삭제",
 //                 inputOption: "openKeyboard",
 //                 fillInText: "",
@@ -204,8 +212,8 @@ module.exports = { handleEvent, config };
 //             },
 //             action: {
 //                 type: "postback",
-//                 label: "checkKeyword",
-//                 data: "checkKeyword",
+//                 label: "checkKeywords",
+//                 data: "checkKeywords",
 //                 displayText: "키워드 확인",
 //             },
 //         },
@@ -225,13 +233,13 @@ module.exports = { handleEvent, config };
 //         },
 //     ],
 // };
-
 // 등록
 // client.createRichMenu(richMenu).then((richMenuId) => {
 //     console.log(richMenuId)
 // });
 // client.setRichMenuImage(
-//     "richmenu-754798c14b181701c64cd7f0d37f52ec",
-//         fs.createReadStream("./static/img/richMenu.png")
+//     "richmenu-ab4bba1c3c9235be50e3e8924fabd940",
+//         fs.createReadStream("./static/image/richMenu.png")
 //     );
-//client.setDefaultRichMenu("richmenu-754798c14b181701c64cd7f0d37f52ec");
+// client.setDefaultRichMenu("richmenu-ab4bba1c3c9235be50e3e8924fabd940");
+//
