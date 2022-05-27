@@ -2,6 +2,7 @@
 const line = require("@line/bot-sdk");
 const setFlexMessage = require("./message/setFlexMessage");
 const setCarouselMessage = require("./message/setCarouselMessage");
+const setKeywordsFlexMessage = require("./message/setKeywordsFlexMessage")
 
 // Market Search
 const { daangnSingleSearch } = require("./search/daangnSearch");
