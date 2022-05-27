@@ -4,7 +4,7 @@ const joongnaSingleSearch = (keyword) => {
   return Promise.resolve(
     axios
       .get(
-        `http://localhost:18081/api/v2/joongna/${encodeURIComponent(
+        `http://joongna-api-server:8080/api/v2/joongna/${encodeURIComponent(
           keyword
         )}`
       )
@@ -17,7 +17,7 @@ const joongnaMultiSearch = (keyword) => {
   return Promise.resolve(
     axios
       .get(
-        `http://localhost:18081/api/v2/joongna/${encodeURIComponent(
+        `http://joongna-api-server:8080/api/v2/joongna/${encodeURIComponent(
           keyword
         )}`
       )

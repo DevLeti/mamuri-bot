@@ -33,7 +33,7 @@ const db = require("../apis/database");
 // database.getAllKeywords = async function()
 
 // Import credentials for Line chatbot
-require("dotenv").config({ path: __dirname + "/../.env" });
+require("dotenv").config({ path: __dirname + "/../config/.env" });
 const config = {
   channelAccessToken: process.env.channelAccessToken,
   channelSecret: process.env.channelSecret,

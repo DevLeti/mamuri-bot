@@ -12,7 +12,8 @@ sequelize
     console.log("database connection complete");
   })
   .catch((err) => {
-    console.log("database connection failed");
+    console.log("database connection failed. restart the server");
+    process.exit(-1)
   });
 
 // Load .env configuration
@@ -32,6 +33,6 @@ app.post("/webhook", line.middleware(config), (req, res) => {
   });
 });
 
-const port = 1231;
+const port = 8080;
 app.listen(port);
 console.log(`listening...\nport : ${port}`);

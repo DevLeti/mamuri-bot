@@ -4,7 +4,7 @@ const bunjangSingleSearch = (keyword) => {
   return Promise.resolve(
     axios
       .get(
-        `http://localhost:18082/api/v2/bunjang/${encodeURIComponent(
+        `http://bunjang-api-server:8080/api/v2/bunjang/${encodeURIComponent(
           keyword
         )}`
       )
@@ -17,7 +17,7 @@ const bunjangMultiSearch = (keyword) => {
   return Promise.resolve(
     axios
       .get(
-        `http://localhost:18082/api/v2/bunjang/${encodeURIComponent(
+        `http://bunjang-api-server:8080/api/v2/bunjang/${encodeURIComponent(
           keyword
         )}`
       )
