@@ -2,7 +2,7 @@
 const line = require("@line/bot-sdk");
 const setFlexMessage = require("./message/setFlexMessage");
 const setCarouselMessage = require("./message/setCarouselMessage");
-const setKeywordsFlexMessage = require("./message/setKeywordsFlexMessage")
+const setKeywordsFlexMessage = require("./message/setKeywordsFlexMessage");
 
 // Market Search
 const { daangnSingleSearch } = require("./search/daangnSearch");
@@ -19,7 +19,7 @@ const fs = require("fs");
 // Cron for Mamul Notification
 const schedule = require("node-schedule");
 const job = schedule.scheduleJob("0 */1 * * *", () => {
-    multiCheckMamul(client);
+  multiCheckMamul(client);
 });
 
 // Database APIs
@@ -41,8 +41,7 @@ const config = {
 
 // Cron for Mamul Notification
 const { multiCheckMamul, checkMamul } = require("./check/checkMamul");
-const { checkKeywords } = require("./check/checkKeywords")
-
+const { checkKeywords } = require("./check/checkKeywords");
 
 // Line chat bot client & event
 const client = new line.Client(config);
@@ -74,25 +73,21 @@ function handleEvent(event) {
           );
         }
       } else if (event.postback.data == "checkItems") {
-        return Promise.resolve(
-            checkMamul(client, event.source.userId),
-        );
+        return Promise.resolve(checkMamul(client, event.source.userId));
       } else if (event.postback.data == "deleteKeyword") {
-          var foundDelete = waitDeleteMamulList.indexOf(event.source.userId);
-          if (foundDelete == -1) {
-              waitDeleteMamulList.push(event.source.userId);
-              console.log(`waitDeleteMamulList Changed : ${waitDeleteMamulList}`);
-              return Promise.resolve(
-                  client.replyMessage(event.replyToken, {
-                      type: "text",
-                      text: "삭제할 매물 키워드를 알려주세요!",
-                  })
-              );
-          }
-      } else if (event.postback.data == "checkKeywords") {
+        var foundDelete = waitDeleteMamulList.indexOf(event.source.userId);
+        if (foundDelete == -1) {
+          waitDeleteMamulList.push(event.source.userId);
+          console.log(`waitDeleteMamulList Changed : ${waitDeleteMamulList}`);
           return Promise.resolve(
-              checkKeywords(client, event)
-          )
+            client.replyMessage(event.replyToken, {
+              type: "text",
+              text: "삭제할 매물 키워드를 알려주세요!",
+            })
+          );
+        }
+      } else if (event.postback.data == "checkKeywords") {
+        return Promise.resolve(checkKeywords(client, event));
       }
     }
     return Promise.resolve(null);
@@ -117,15 +112,19 @@ function handleEvent(event) {
 
     var foundDelete = waitDeleteMamulList.indexOf(event.source.userId);
     if (foundDelete != -1) {
-        waitDeleteMamulList.splice(foundDelete, 1);
-        console.log(waitDeleteMamulList[foundDelete]);
-        return Promise.resolve(
-            db.deleteKeyword(event.source.userId, event.message.text),
-            client.replyMessage(event.replyToken, {
-                type: "text",
-                text: `매물이 삭제되었습니다!\n삭제된 매물: ${event.message.text}`,
-            })
-        )
+      waitDeleteMamulList.splice(foundDelete, 1);
+      console.log(waitDeleteMamulList[foundDelete]);
+      return Promise.resolve(
+        db.deleteKeyword(event.source.userId, event.message.text),
+        client
+          .replyMessage(event.replyToken, {
+            type: "text",
+            text: `매물이 삭제되었습니다!\n삭제된 매물: ${event.message.text}`,
+          })
+          .then(() => {
+            checkKeywords(client, event);
+          })
+      );
     }
   }
 }
