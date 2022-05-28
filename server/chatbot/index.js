@@ -180,83 +180,82 @@ module.exports = { handleEvent, config };
 
 /*리치메뉴 설정*/
 // let richMenu = {
-//     size: {
-//         width: 2006,
-//         height: 827,
+//   size: {
+//     width: 2006,
+//     height: 827,
+//   },
+//   selected: false,
+//   name: "Real richMenu",
+//   chatBarText: "메뉴 열기",
+//   areas: [
+//     {
+//       bounds: {
+//         x: 0,
+//         y: 0,
+//         width: 1003,
+//         height: 413,
+//       },
+//       action: {
+//         type: "postback",
+//         label: "newKeyword",
+//         data: "newKeyword",
+//         displayText: "키워드 추가",
+//         inputOption: "openKeyboard",
+//         fillInText: "",
+//       },
 //     },
-//     selected: false,
-//     name: "Real richMenu",
-//     chatBarText: "메뉴 열기",
-//     areas: [
-//         {
-//             bounds: {
-//                 x: 0,
-//                 y: 0,
-//                 width: 1003,
-//                 height: 413,
-//             },
-//             action: {
-//                 type: "postback",
-//                 label: "newKeyword",
-//                 data: "newKeyword",
-//                 displayText: "키워드 추가",
-//                 inputOption: "openKeyboard",
-//                 fillInText: "",
-//             },
-//         },
-//         {
-//             bounds: {
-//                 x: 1003,
-//                 y: 0,
-//                 width: 1003,
-//                 height: 413,
-//             },
-//             action: {
-//                 type: "postback",
-//                 label: "deleteKeyword",
-//                 data: "deleteKeyword",
-//                 displayText: "키워드 삭제",
-//                 inputOption: "openKeyboard",
-//                 fillInText: "",
-//             },
-//         },
-//         {
-//             bounds: {
-//                 x: 0,
-//                 y: 413,
-//                 width: 1003,
-//                 height: 414,
-//             },
-//             action: {
-//                 type: "postback",
-//                 label: "checkKeywords",
-//                 data: "checkKeywords",
-//                 displayText: "키워드 확인",
-//             },
-//         },
-//         {
-//             bounds: {
-//                 x: 1003,
-//                 y: 413,
-//                 width: 1003,
-//                 height: 414,
-//             },
-//             action: {
-//                 type: "postback",
-//                 label: "checkItems",
-//                 data: "checkItems",
-//                 displayText: "매물 즉시 검색",
-//             },
-//         },
-//     ],
+//     {
+//       bounds: {
+//         x: 1003,
+//         y: 0,
+//         width: 1003,
+//         height: 413,
+//       },
+//       action: {
+//         type: "postback",
+//         label: "deleteKeyword",
+//         data: "deleteKeyword",
+//         displayText: "키워드 삭제",
+//         inputOption: "openKeyboard",
+//         fillInText: "",
+//       },
+//     },
+//     {
+//       bounds: {
+//         x: 0,
+//         y: 413,
+//         width: 1003,
+//         height: 414,
+//       },
+//       action: {
+//         type: "postback",
+//         label: "checkKeywords",
+//         data: "checkKeywords",
+//         displayText: "키워드 확인",
+//       },
+//     },
+//     {
+//       bounds: {
+//         x: 1003,
+//         y: 413,
+//         width: 1003,
+//         height: 414,
+//       },
+//       action: {
+//         type: "postback",
+//         label: "checkItems",
+//         data: "checkItems",
+//         displayText: "매물 즉시 검색",
+//       },
+//     },
+//   ],
 // };
 // 등록
 // client.createRichMenu(richMenu).then((richMenuId) => {
-//     console.log(richMenuId)
+//   console.log(richMenuId);
 // });
 // client.setRichMenuImage(
-//     "richmenu-ab4bba1c3c9235be50e3e8924fabd940",
-//         fs.createReadStream("./static/image/richMenu.png")
-//     );
-// client.setDefaultRichMenu("richmenu-ab4bba1c3c9235be50e3e8924fabd940");
-//
+//   "richmenu-de8d05638cd98d81e765576986376314",
+//   fs.createReadStream("./static/image/richMenu.png")
+// );
+// client.setDefaultRichMenu("richmenu-de8d05638cd98d81e765576986376314");
