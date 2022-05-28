@@ -51,8 +51,8 @@ function setCarouselMessage(mamuls) {
 
       if (mamuls[i]["extraInfo"] == undefined || mamuls[i]["extraInfo"] == "") {
         mamuls[i]["extraInfo"] = "없음";
-      } else if (mamuls[i]["extraInfo"].length > 150) {
-        mamuls[i]["extraInfo"] = mamuls[i]["extraInfo"].slice(0, 150) + "\n...";
+      } else if (mamuls[i]["extraInfo"].length > 70) {
+        mamuls[i]["extraInfo"] = mamuls[i]["extraInfo"].slice(0, 70) + "\n...";
       }
 
       flexMessage = setFlexMessage(
