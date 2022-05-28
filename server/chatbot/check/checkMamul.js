@@ -15,7 +15,13 @@ const multiCheckMamul = (client) => {
     for (let i = 0, pending = Promise.resolve(); i < keywords.length; i++) {
       pending = db.getUsersByKeyword(keywords[i]).then((userIds) => {
         marketMultiSearch(keywords[i]).then((res) => {
-          client.multicast(userIds, [setCarouselMessage(res)]);
+          client.multicast(userIds, [
+            {
+              type: "text",
+              text: `유저님의 ${keywords[i]} 매물 알림이 도착했어요!`,
+            },
+            setCarouselMessage(res),
+          ]);
         });
       });
     }
