@@ -71,11 +71,12 @@ function setCarouselMessage(mamuls) {
           pos = foundPos + 1;
         }
         console.log(`pos: ${pos}`);
-        if (foundPos !== 1) {
+        if (foundPos !== -1) {
           mamuls[i]["extraInfo"] =
             mamuls[i]["extraInfo"].slice(0, foundPos) + "\n...";
           console.log(`parsed extraInfo : \n${mamuls[i]["extraInfo"]}`);
-        } else if (mamuls[i]["extraInfo"].length > 40) {
+        }
+        if (mamuls[i]["extraInfo"].length > 40) {
           mamuls[i]["extraInfo"] =
             mamuls[i]["extraInfo"].slice(0, 40) + "\n...";
           console.log(`parsed extraInfo : \n${mamuls[i]["extraInfo"]}`);
@@ -101,6 +102,22 @@ function setCarouselMessage(mamuls) {
         mamuls[i]["itemUrl"],
         mamuls[i]["extraInfo"]
       );
+      if (i == 0) {
+        flexMessage["header"] = {
+          type: "box",
+          layout: "horizontal",
+          contents: [
+            { type: "text", text: "매무리 봇", size: "sm", color: "#1DB446" },
+            {
+              type: "text",
+              text: `키워드: rtx3080`,
+              align: "end",
+              color: "#1DB446",
+              weight: "bold",
+            },
+          ],
+        };
+      }
       flexMessages.push(flexMessage);
     } catch (err) {
       console.log(err);
