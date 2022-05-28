@@ -92,9 +92,7 @@ Need to write secret
    mamuri-bot/ngrok/ngrok.yml
    mamuri-bot/server/config/.env
    ```
-3. Executing `deploy.sh` for deployment with docker-compose
-
-   This script will `build` all images automatically and `docker-compose up` on your system
+3. Executing `deploy.sh` for deployment with docker-compose. This script will `build` all images automatically and `docker-compose up` on your system
    ```shell
    #!/usr/bin/env bash
    
@@ -108,12 +106,12 @@ Need to write secret
    # docker build -t mamuri-ngrok ./ngrok/
    # docker-compose up -d
    ```
-4. Check your ngrok public URL
+5. Check your ngrok public URL
    ```shell
    docker logs mamuri-ngrok
    ```
    ![ngrok_deployment_1](http://khuhub.khu.ac.kr/2018102211/mamuri-bot/uploads/4ccdc73c9efc4c3dc58147f17b992cc6/그림1.png)
-5. Set your public URL to Line chatbot configuration for webhook
+6. Set your public URL to Line chatbot configuration for webhook
    ![ngrok_deployment_2](http://khuhub.khu.ac.kr/2018102211/mamuri-bot/uploads/5dd076f66629948dd1682fc4054ff459/그림2.png)
 
 ## Contributing
