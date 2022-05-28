@@ -5,7 +5,9 @@
     "database": "mamuri_db",
     "host": "mamuri-db",
     "port": "3306",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "charset": "utf8",
+    "collate": "utf8_general_ci"
   },
   "test": {
     "username": "root",
