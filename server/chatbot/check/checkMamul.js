@@ -24,11 +24,20 @@ const multiCheckMamul = (client) => {
 
 const checkMamul = (client, userId) => {
   db.getKeywordsByUserId(userId).then((keywords) => {
-    for (let i = 0, pending = Promise.resolve(); i< keywords.length; i++) {
+    for (let i = 0, pending = Promise.resolve(); i < keywords.length; i++) {
       pending = marketMultiSearch(keywords[i]).then((res) => {
-        client.pushMessage(userId, setCarouselMessage(res));
+        client.multicast(
+          [userId],
+          [
+            {
+              type: "text",
+              text: `키워드: ${keywords[i]}`,
+            },
+            setCarouselMessage(res),
+          ]
+        );
       });
-    };
+    }
   });
 };
 
