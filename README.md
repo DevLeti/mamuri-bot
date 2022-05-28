@@ -1,11 +1,6 @@
-![node-17.9.0](https://img.shields.io/badge/Node-17.9.0-green)
-![express-4.18.1](https://img.shields.io/badge/Express-4.18.1-green)
-![sequelize-6.20.0](https://img.shields.io/badge/Sequelize-6.20.0-green)
+![node-17.9.0](https://img.shields.io/badge/Node-17.9.0-green) ![express-4.18.1](https://img.shields.io/badge/Express-4.18.1-green) ![sequelize-6.20.0](https://img.shields.io/badge/Sequelize-6.20.0-green)
 
-![go-1.17.3](https://img.shields.io/badge/Go-1.17.3-blue)
-![goecho-4.7.2](https://img.shields.io/badge/Echo-4.7.2-blue)
-![python-latest](https://img.shields.io/badge/Python-latest-blue)
-![fastapi-0.77.1](https://img.shields.io/badge/Fastapi-0.77.1-blue)
+![go-1.17.3](https://img.shields.io/badge/Go-1.17.3-blue) ![goecho-4.7.2](https://img.shields.io/badge/Echo-4.7.2-blue) ![python-latest](https://img.shields.io/badge/Python-latest-blue) ![fastapi-0.77.1](https://img.shields.io/badge/Fastapi-0.77.1-blue)
 
 ![mysql-5.7](https://img.shields.io/badge/Mysql-5.7-yellowgreen)
 
@@ -82,17 +77,22 @@ Need to write secret
 ### Installation
 
 1. Clone the repository
+
    ```shell
    git clone http://khuhub.khu.ac.kr/2018102211/mamuri-bot
    ```
+
 2. Put your secret files that you create in prerequisite to
+   
    ```shell
    mamuri-bot/database/mysql_init/.env
    mamuri-bot/joongna/config/.env
    mamuri-bot/ngrok/ngrok.yml
    mamuri-bot/server/config/.env
    ```
+   
 3. Executing `deploy.sh` for deployment with docker-compose. This script will `build` all images automatically and `docker-compose up` on your system
+   
    ```shell
    #!/usr/bin/env bash
    
@@ -106,12 +106,16 @@ Need to write secret
    # docker build -t mamuri-ngrok ./ngrok/
    # docker-compose up -d
    ```
-5. Check your ngrok public URL
+   
+4. Check your ngrok public URL
+   
    ```shell
    docker logs mamuri-ngrok
    ```
+   
    ![ngrok_deployment_1](http://khuhub.khu.ac.kr/2018102211/mamuri-bot/uploads/4ccdc73c9efc4c3dc58147f17b992cc6/그림1.png)
-6. Set your public URL to Line chatbot configuration for webhook
+
+5. Set your public URL to Line chatbot configuration for webhook
    ![ngrok_deployment_2](http://khuhub.khu.ac.kr/2018102211/mamuri-bot/uploads/5dd076f66629948dd1682fc4054ff459/그림2.png)
 
 ## Contributing
