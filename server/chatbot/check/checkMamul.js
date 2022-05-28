@@ -31,7 +31,7 @@ const checkMamul = (client, userId) => {
           [
             {
               type: "text",
-              text: `키워드: ${keywords[i]}`,
+              text: `유저님의 ${keywords[i]} 매물 알림이 도착했어요!`,
             },
             setCarouselMessage(res),
           ]
