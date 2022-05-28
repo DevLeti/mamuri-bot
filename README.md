@@ -57,7 +57,6 @@ Need to write secret
    # Secret Configuration
    SECRET.CLIENTID={NAVER_API_CLIENT_ID}
    SECRET.CLIENTSECRET={NAVER_API_CLIENT_SECRET}
-   
    # Header Configuration
    HEADER.COOKIE=NID_SES={YOUR_COOKIE}
    HEADER.USERAGENT={YOUR_SYSTEM_USER_AGENT}
@@ -83,7 +82,7 @@ Need to write secret
 ### Installation
 
 1. Clone the repository
-   ```
+   ```shell
    git clone http://khuhub.khu.ac.kr/2018102211/mamuri-bot
    ```
 2. Put your secret files that you create in prerequisite to
