@@ -51,9 +51,47 @@ function setCarouselMessage(mamuls) {
 
       if (mamuls[i]["extraInfo"] == undefined || mamuls[i]["extraInfo"] == "") {
         mamuls[i]["extraInfo"] = "없음";
-      } else if (mamuls[i]["extraInfo"].length > 70) {
-        mamuls[i]["extraInfo"] = mamuls[i]["extraInfo"].slice(0, 70) + "\n...";
+      } else {
+        if (
+          mamuls[i]["platform"] === "joongna" ||
+          mamuls[i]["platform"] === "중고나라"
+        ) {
+          let searchDot = mamuls[i]["extraInfo"].indexOf("...");
+          if (searchDot !== -1) {
+            mamuls[i]["extraInfo"] = mamuls[i]["extraInfo"].slice(0, searchDot);
+          }
+        }
+
+        console.log(`unparsed extraInfo : \n${mamuls[i]["extraInfo"]}`);
+        let searchValue = "\n";
+        let pos = 0;
+        let foundPos = 0;
+        for (let j = 0; j < 4 && foundPos !== -1; j++) {
+          foundPos = mamuls[i]["extraInfo"].indexOf(searchValue, pos);
+          pos = foundPos + 1;
+        }
+        console.log(`pos: ${pos}`);
+        if (foundPos !== 1) {
+          mamuls[i]["extraInfo"] =
+            mamuls[i]["extraInfo"].slice(0, foundPos) + "\n...";
+          console.log(`parsed extraInfo : \n${mamuls[i]["extraInfo"]}`);
+        } else if (mamuls[i]["extraInfo"].length > 40) {
+          mamuls[i]["extraInfo"] =
+            mamuls[i]["extraInfo"].slice(0, 40) + "\n...";
+          console.log(`parsed extraInfo : \n${mamuls[i]["extraInfo"]}`);
+        }
       }
+      // } else if (mamuls[i]["extraInfo"].length > 70) {
+      //   mamuls[i]["extraInfo"] = mamuls[i]["extraInfo"].slice(0, 70) + "\n...";
+      // } else {
+
+      // }
+      // else if (mamuls[i]["extraInfo"].indexOf("\n") !== -1) {
+      //   console.log(mamuls[i]["extraInfo"].indexOf("\n", 4));
+      //   let slicePoint = mamuls[i]["extraInfo"].indexOf("\n", 4);
+      //   mamuls[i]["extraInfo"] =
+      //     mamuls[i]["extraInfo"].slice(0, slicePoint) + "\n...";
+      // }
 
       flexMessage = setFlexMessage(
         mamuls[i]["platform"],
