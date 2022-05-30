@@ -20,7 +20,7 @@ function setCarouselMessage(mamuls, keyword) {
   ) {
     let nonMamulMessage = {
       type: "flex",
-      altText: "매물 검색 에러",
+      altText: `${keyword} 매물은 아직 없어요!`,
       contents: setFlexMessage(
         "-",
         "매물이 없습니다!",
