@@ -1,17 +1,31 @@
-const { daangnSingleSearch } = require("./daangnSearch");
-const { bunjangSingleSearch } = require("./bunjangSearch");
-const { joongnaSingleSearch } = require("./joongnaSearch");
-const setCarouselMessage = require("../message/setCarouselMessage");
+const { daangnMultiSearch } = require("./daangnSearch");
+const { bunjangMultiSearch } = require("./bunjangSearch");
+const { joongnaMultiSearch } = require("./joongnaSearch");
 
 const marketMultiSearch = (keyword) => {
   const result = [];
   return new Promise((resolve, reject) => {
-    daangnSingleSearch(keyword).then((res) => {
-      result.push(res);
-      bunjangSingleSearch(keyword).then((res) => {
-        result.push(res);
-        joongnaSingleSearch(keyword).then((res) => {
-          result.push(res);
+    daangnMultiSearch(keyword).then((res) => {
+      console.log(`daangn: ${res}`);
+      if (res !== undefined && res !== null) {
+        for (let i = 0; i < res.length && i < 4; i++) {
+          result.push(res[i]);
+        }
+      }
+      bunjangMultiSearch(keyword).then((res) => {
+        console.log(`bunjang: ${res}`);
+        if (res !== undefined && res !== null) {
+          for (let i = 0; i < res.length && i < 4; i++) {
+            result.push(res[i]);
+          }
+        }
+        joongnaMultiSearch(keyword).then((res) => {
+          console.log(`joongna: ${res}`);
+          if (res !== undefined && res !== null) {
+            for (let i = 0; i < res.length && i < 4; i++) {
+              result.push(res[i]);
+            }
+          }
           resolve(result);
         });
       });

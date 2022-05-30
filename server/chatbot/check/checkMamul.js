@@ -1,21 +1,15 @@
 const { marketMultiSearch } = require("../search/marketSearch");
 const setCarouselMessage = require("../message/setCarouselMessage");
+
 // Database APIs
 const db = require("../../apis/database");
-// API List
-// database.addKeyword = async function(keyword, userId)
-// database.deleteKeyword = async function(userId, keyword)
-// database.getKeywordsByUserId = async function(userId)
-// database.getUsersByKeyword = async function(keyword)
-// database.getAllUsers = async function()
-// database.getAllKeywords = async function()
 
 const multiCheckMamul = (client) => {
   db.getAllKeywords().then((keywords) => {
     for (let i = 0, pending = Promise.resolve(); i < keywords.length; i++) {
       pending = db.getUsersByKeyword(keywords[i]).then((userIds) => {
         marketMultiSearch(keywords[i]).then((res) => {
-          client.multicast(userIds, [setCarouselMessage(res)]);
+          client.multicast(userIds, [setCarouselMessage(res, keywords[i])]);
         });
       });
     }
@@ -24,11 +18,11 @@ const multiCheckMamul = (client) => {
 
 const checkMamul = (client, userId) => {
   db.getKeywordsByUserId(userId).then((keywords) => {
-    for (let i = 0, pending = Promise.resolve(); i< keywords.length; i++) {
+    for (let i = 0, pending = Promise.resolve(); i < keywords.length; i++) {
       pending = marketMultiSearch(keywords[i]).then((res) => {
-        client.pushMessage(userId, setCarouselMessage(res));
+        client.pushMessage(userId, setCarouselMessage(res, keywords[i]));
       });
-    };
+    }
   });
 };
 

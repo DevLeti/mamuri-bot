@@ -1,36 +1,21 @@
 // Line chatbot + Message generate functions
 const line = require("@line/bot-sdk");
-const setFlexMessage = require("./message/setFlexMessage");
 const setCarouselMessage = require("./message/setCarouselMessage");
-const setKeywordsFlexMessage = require("./message/setKeywordsFlexMessage")
 
 // Market Search
-const { daangnSingleSearch } = require("./search/daangnSearch");
-const { daangnMultiSearch } = require("./search/daangnSearch");
-const { joongnaSingleSearch } = require("./search/joongnaSearch");
-const { joongnaMultiSearch } = require("./search/joongnaSearch");
-const { bunjangSingleSearch } = require("./search/bunjangSearch");
-const { bunjangMultiSearch } = require("./search/bunjangSearch");
 const { marketMultiSearch } = require("./search/marketSearch");
 
-// File search - Will be deleted (Unused)
+// File search
 const fs = require("fs");
 
 // Cron for Mamul Notification
 const schedule = require("node-schedule");
 const job = schedule.scheduleJob("0 */1 * * *", () => {
-    multiCheckMamul(client);
+  multiCheckMamul(client);
 });
 
 // Database APIs
 const db = require("../apis/database");
-// API List
-// database.addKeyword = async function(keyword, userId)
-// database.deleteKeyword = async function(userId, keyword)
-// database.getKeywordsByUserId = async function(userId)
-// database.getUsersByKeyword = async function(keyword)
-// database.getAllUsers = async function()
-// database.getAllKeywords = async function()
 
 // Import credentials for Line chatbot
 require("dotenv").config({ path: __dirname + "/../config/.env" });
@@ -41,8 +26,7 @@ const config = {
 
 // Cron for Mamul Notification
 const { multiCheckMamul, checkMamul } = require("./check/checkMamul");
-const { checkKeywords } = require("./check/checkKeywords")
-
+const { checkKeywords } = require("./check/checkKeywords");
 
 // Line chat bot client & event
 const client = new line.Client(config);
@@ -74,25 +58,21 @@ function handleEvent(event) {
           );
         }
       } else if (event.postback.data == "checkItems") {
-        return Promise.resolve(
-            checkMamul(client, event.source.userId),
-        );
+        return Promise.resolve(checkMamul(client, event.source.userId));
       } else if (event.postback.data == "deleteKeyword") {
-          var foundDelete = waitDeleteMamulList.indexOf(event.source.userId);
-          if (foundDelete == -1) {
-              waitDeleteMamulList.push(event.source.userId);
-              console.log(`waitDeleteMamulList Changed : ${waitDeleteMamulList}`);
-              return Promise.resolve(
-                  client.replyMessage(event.replyToken, {
-                      type: "text",
-                      text: "삭제할 매물 키워드를 알려주세요!",
-                  })
-              );
-          }
-      } else if (event.postback.data == "checkKeywords") {
+        var foundDelete = waitDeleteMamulList.indexOf(event.source.userId);
+        if (foundDelete == -1) {
+          waitDeleteMamulList.push(event.source.userId);
+          console.log(`waitDeleteMamulList Changed : ${waitDeleteMamulList}`);
           return Promise.resolve(
-              checkKeywords(client, event)
-          )
+            client.replyMessage(event.replyToken, {
+              type: "text",
+              text: "삭제할 매물 키워드를 알려주세요!",
+            })
+          );
+        }
+      } else if (event.postback.data == "checkKeywords") {
+        return Promise.resolve(checkKeywords(client, event));
       }
     }
     return Promise.resolve(null);
@@ -110,22 +90,29 @@ function handleEvent(event) {
           text: `매물이 등록되었습니다!\n등록된 매물: ${event.message.text}`,
         }),
         marketMultiSearch(event.message.text).then((res) => {
-          client.pushMessage(event.source.userId, setCarouselMessage(res));
+          client.pushMessage(
+            event.source.userId,
+            setCarouselMessage(res, event.message.text)
+          );
         })
       );
     }
 
     var foundDelete = waitDeleteMamulList.indexOf(event.source.userId);
     if (foundDelete != -1) {
-        waitDeleteMamulList.splice(foundDelete, 1);
-        console.log(waitDeleteMamulList[foundDelete]);
-        return Promise.resolve(
-            db.deleteKeyword(event.source.userId, event.message.text),
-            client.replyMessage(event.replyToken, {
-                type: "text",
-                text: `매물이 삭제되었습니다!\n삭제된 매물: ${event.message.text}`,
-            })
-        )
+      waitDeleteMamulList.splice(foundDelete, 1);
+      console.log(waitDeleteMamulList[foundDelete]);
+      return Promise.resolve(
+        db.deleteKeyword(event.source.userId, event.message.text),
+        client
+          .replyMessage(event.replyToken, {
+            type: "text",
+            text: `매물이 삭제되었습니다!\n삭제된 매물: ${event.message.text}`,
+          })
+          .then(() => {
+            checkKeywords(client, event);
+          })
+      );
     }
   }
 }
@@ -181,83 +168,82 @@ module.exports = { handleEvent, config };
 
 /*리치메뉴 설정*/
 // let richMenu = {
-//     size: {
-//         width: 2006,
-//         height: 827,
+//   size: {
+//     width: 2006,
+//     height: 827,
+//   },
+//   selected: false,
+//   name: "Real richMenu",
+//   chatBarText: "메뉴 열기",
+//   areas: [
+//     {
+//       bounds: {
+//         x: 0,
+//         y: 0,
+//         width: 1003,
+//         height: 413,
+//       },
+//       action: {
+//         type: "postback",
+//         label: "newKeyword",
+//         data: "newKeyword",
+//         displayText: "키워드 추가",
+//         inputOption: "openKeyboard",
+//         fillInText: "",
+//       },
 //     },
-//     selected: false,
-//     name: "Real richMenu",
-//     chatBarText: "메뉴 열기",
-//     areas: [
-//         {
-//             bounds: {
-//                 x: 0,
-//                 y: 0,
-//                 width: 1003,
-//                 height: 413,
-//             },
-//             action: {
-//                 type: "postback",
-//                 label: "newKeyword",
-//                 data: "newKeyword",
-//                 displayText: "키워드 추가",
-//                 inputOption: "openKeyboard",
-//                 fillInText: "",
-//             },
-//         },
-//         {
-//             bounds: {
-//                 x: 1003,
-//                 y: 0,
-//                 width: 1003,
-//                 height: 413,
-//             },
-//             action: {
-//                 type: "postback",
-//                 label: "deleteKeyword",
-//                 data: "deleteKeyword",
-//                 displayText: "키워드 삭제",
-//                 inputOption: "openKeyboard",
-//                 fillInText: "",
-//             },
-//         },
-//         {
-//             bounds: {
-//                 x: 0,
-//                 y: 413,
-//                 width: 1003,
-//                 height: 414,
-//             },
-//             action: {
-//                 type: "postback",
-//                 label: "checkKeywords",
-//                 data: "checkKeywords",
-//                 displayText: "키워드 확인",
-//             },
-//         },
-//         {
-//             bounds: {
-//                 x: 1003,
-//                 y: 413,
-//                 width: 1003,
-//                 height: 414,
-//             },
-//             action: {
-//                 type: "postback",
-//                 label: "checkItems",
-//                 data: "checkItems",
-//                 displayText: "매물 즉시 검색",
-//             },
-//         },
-//     ],
+//     {
+//       bounds: {
+//         x: 1003,
+//         y: 0,
+//         width: 1003,
+//         height: 413,
+//       },
+//       action: {
+//         type: "postback",
+//         label: "deleteKeyword",
+//         data: "deleteKeyword",
+//         displayText: "키워드 삭제",
+//         inputOption: "openKeyboard",
+//         fillInText: "",
+//       },
+//     },
+//     {
+//       bounds: {
+//         x: 0,
+//         y: 413,
+//         width: 1003,
+//         height: 414,
+//       },
+//       action: {
+//         type: "postback",
+//         label: "checkKeywords",
+//         data: "checkKeywords",
+//         displayText: "키워드 확인",
+//       },
+//     },
+//     {
+//       bounds: {
+//         x: 1003,
+//         y: 413,
+//         width: 1003,
+//         height: 414,
+//       },
+//       action: {
+//         type: "postback",
+//         label: "checkItems",
+//         data: "checkItems",
+//         displayText: "매물 즉시 검색",
+//       },
+//     },
+//   ],
 // };
 // 등록
 // client.createRichMenu(richMenu).then((richMenuId) => {
-//     console.log(richMenuId)
+//   console.log(richMenuId);
 // });
 // client.setRichMenuImage(
-//     "richmenu-ab4bba1c3c9235be50e3e8924fabd940",
-//         fs.createReadStream("./static/image/richMenu.png")
-//     );
-// client.setDefaultRichMenu("richmenu-ab4bba1c3c9235be50e3e8924fabd940");
-//
+//   "richmenu-de8d05638cd98d81e765576986376314",
+//   fs.createReadStream("./static/image/richMenu.png")
+// );
+// client.setDefaultRichMenu("richmenu-de8d05638cd98d81e765576986376314");

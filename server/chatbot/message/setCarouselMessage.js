@@ -1,16 +1,12 @@
 const setFlexMessage = require("./setFlexMessage");
 
-function setCarouselMessage(mamuls) {
+function setCarouselMessage(mamuls, keyword) {
   let flexMessages = [];
   let flexMessage = {};
-  if (
-    mamuls[0] == undefined &&
-    mamuls[1] == undefined &&
-    mamuls[2] == undefined
-  ) {
+  if (mamuls[0] == undefined) {
     let nonMamulMessage = {
       type: "flex",
-      altText: "매물 검색 에러",
+      altText: `${keyword} 매물은 아직 없어요!`,
       contents: setFlexMessage(
         "-",
         "매물이 없습니다!",
@@ -19,6 +15,20 @@ function setCarouselMessage(mamuls) {
         "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Error.svg/515px-Error.svg.png",
         "-"
       ),
+    };
+    nonMamulMessage["contents"]["header"] = {
+      type: "box",
+      layout: "horizontal",
+      contents: [
+        { type: "text", text: "매무리 봇", size: "sm", color: "#1DB446" },
+        {
+          type: "text",
+          text: `키워드: ${keyword}`,
+          align: "end",
+          color: "#1DB446",
+          weight: "bold",
+        },
+      ],
     };
     return nonMamulMessage;
   }
@@ -51,9 +61,48 @@ function setCarouselMessage(mamuls) {
 
       if (mamuls[i]["extraInfo"] == undefined || mamuls[i]["extraInfo"] == "") {
         mamuls[i]["extraInfo"] = "없음";
-      } else if (mamuls[i]["extraInfo"].length > 150) {
-        mamuls[i]["extraInfo"] = mamuls[i]["extraInfo"].slice(0, 150) + "\n...";
+      } else {
+        if (
+          mamuls[i]["platform"] === "joongna" ||
+          mamuls[i]["platform"] === "중고나라"
+        ) {
+          let searchDot = mamuls[i]["extraInfo"].indexOf("...");
+          if (searchDot !== -1) {
+            mamuls[i]["extraInfo"] = mamuls[i]["extraInfo"].slice(0, searchDot);
+          }
+        }
+
+        console.log(`unparsed extraInfo : \n${mamuls[i]["extraInfo"]}`);
+        let searchValue = "\n";
+        let pos = 0;
+        let foundPos = 0;
+        for (let j = 0; j < 4 && foundPos !== -1; j++) {
+          foundPos = mamuls[i]["extraInfo"].indexOf(searchValue, pos);
+          pos = foundPos + 1;
+        }
+        console.log(`pos: ${pos}`);
+        if (foundPos !== -1) {
+          mamuls[i]["extraInfo"] =
+            mamuls[i]["extraInfo"].slice(0, foundPos) + "\n...";
+          console.log(`parsed extraInfo : \n${mamuls[i]["extraInfo"]}`);
+        }
+        if (mamuls[i]["extraInfo"].length > 40) {
+          mamuls[i]["extraInfo"] =
+            mamuls[i]["extraInfo"].slice(0, 40) + "\n...";
+          console.log(`parsed extraInfo : \n${mamuls[i]["extraInfo"]}`);
+        }
       }
+      // } else if (mamuls[i]["extraInfo"].length > 70) {
+      //   mamuls[i]["extraInfo"] = mamuls[i]["extraInfo"].slice(0, 70) + "\n...";
+      // } else {
+
+      // }
+      // else if (mamuls[i]["extraInfo"].indexOf("\n") !== -1) {
+      //   console.log(mamuls[i]["extraInfo"].indexOf("\n", 4));
+      //   let slicePoint = mamuls[i]["extraInfo"].indexOf("\n", 4);
+      //   mamuls[i]["extraInfo"] =
+      //     mamuls[i]["extraInfo"].slice(0, slicePoint) + "\n...";
+      // }
 
       flexMessage = setFlexMessage(
         mamuls[i]["platform"],
@@ -69,10 +118,23 @@ function setCarouselMessage(mamuls) {
       continue;
     }
   }
-
+  flexMessages[0]["header"] = {
+    type: "box",
+    layout: "horizontal",
+    contents: [
+      { type: "text", text: "매무리 봇", size: "sm", color: "#1DB446" },
+      {
+        type: "text",
+        text: `키워드: ${keyword}`,
+        align: "end",
+        color: "#1DB446",
+        weight: "bold",
+      },
+    ],
+  };
   let carouselMessage = {
     type: "flex",
-    altText: "Carousel mamul message",
+    altText: `${keyword} 매무리가 도착했어요!`,
     contents: {
       type: "carousel",
       contents: flexMessages,
