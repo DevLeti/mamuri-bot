@@ -1,6 +1,6 @@
 const setFlexMessage = require("./setFlexMessage");
 
-function setCarouselMessage(mamuls) {
+function setCarouselMessage(mamuls, keyword) {
   let flexMessages = [];
   let flexMessage = {};
   if (
@@ -102,32 +102,29 @@ function setCarouselMessage(mamuls) {
         mamuls[i]["itemUrl"],
         mamuls[i]["extraInfo"]
       );
-      if (i == 0) {
-        flexMessage["header"] = {
-          type: "box",
-          layout: "horizontal",
-          contents: [
-            { type: "text", text: "매무리 봇", size: "sm", color: "#1DB446" },
-            {
-              type: "text",
-              text: `키워드: rtx3080`,
-              align: "end",
-              color: "#1DB446",
-              weight: "bold",
-            },
-          ],
-        };
-      }
       flexMessages.push(flexMessage);
     } catch (err) {
       console.log(err);
       continue;
     }
   }
-
+  flexMessages[0]["header"] = {
+    type: "box",
+    layout: "horizontal",
+    contents: [
+      { type: "text", text: "매무리 봇", size: "sm", color: "#1DB446" },
+      {
+        type: "text",
+        text: `키워드: ${keyword}`,
+        align: "end",
+        color: "#1DB446",
+        weight: "bold",
+      },
+    ],
+  };
   let carouselMessage = {
     type: "flex",
-    altText: "Carousel mamul message",
+    altText: `유저님의 ${keyword}매물 알림!`,
     contents: {
       type: "carousel",
       contents: flexMessages,

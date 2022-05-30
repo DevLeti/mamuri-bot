@@ -1,16 +1,16 @@
 // Line chatbot + Message generate functions
 const line = require("@line/bot-sdk");
-const setFlexMessage = require("./message/setFlexMessage");
+// const setFlexMessage = require("./message/setFlexMessage");
 const setCarouselMessage = require("./message/setCarouselMessage");
-const setKeywordsFlexMessage = require("./message/setKeywordsFlexMessage");
+// const setKeywordsFlexMessage = require("./message/setKeywordsFlexMessage");
 
 // Market Search
-const { daangnSingleSearch } = require("./search/daangnSearch");
-const { daangnMultiSearch } = require("./search/daangnSearch");
-const { joongnaSingleSearch } = require("./search/joongnaSearch");
-const { joongnaMultiSearch } = require("./search/joongnaSearch");
-const { bunjangSingleSearch } = require("./search/bunjangSearch");
-const { bunjangMultiSearch } = require("./search/bunjangSearch");
+// const { daangnSingleSearch } = require("./search/daangnSearch");
+// const { daangnMultiSearch } = require("./search/daangnSearch");
+// const { joongnaSingleSearch } = require("./search/joongnaSearch");
+// const { joongnaMultiSearch } = require("./search/joongnaSearch");
+// const { bunjangSingleSearch } = require("./search/bunjangSearch");
+// const { bunjangMultiSearch } = require("./search/bunjangSearch");
 const { marketMultiSearch } = require("./search/marketSearch");
 
 // File search - Will be deleted (Unused)
@@ -105,7 +105,10 @@ function handleEvent(event) {
           text: `매물이 등록되었습니다!\n등록된 매물: ${event.message.text}`,
         }),
         marketMultiSearch(event.message.text).then((res) => {
-          client.pushMessage(event.source.userId, setCarouselMessage(res));
+          client.pushMessage(
+            event.source.userId,
+            setCarouselMessage(res, event.message.text)
+          );
         })
       );
     }

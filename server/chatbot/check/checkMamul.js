@@ -20,7 +20,7 @@ const multiCheckMamul = (client) => {
               type: "text",
               text: `유저님의 ${keywords[i]} 매물 알림이 도착했어요!`,
             },
-            setCarouselMessage(res),
+            setCarouselMessage(res, keywords[i]),
           ]);
         });
       });
@@ -39,7 +39,7 @@ const checkMamul = (client, userId) => {
               type: "text",
               text: `유저님의 ${keywords[i]} 매물 알림이 도착했어요!`,
             },
-            setCarouselMessage(res),
+            setCarouselMessage(res, keywords[i]),
           ]
         );
       });
