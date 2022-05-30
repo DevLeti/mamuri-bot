@@ -1,5 +1,7 @@
 const { marketMultiSearch } = require("../search/marketSearch");
 const setCarouselMessage = require("../message/setCarouselMessage");
+const combineCarouselMessage = require("../message/combineCarouselMessage");
+
 // Database APIs
 const db = require("../../apis/database");
 // API List
@@ -18,7 +20,7 @@ const multiCheckMamul = (client) => {
           client.multicast(userIds, [
             {
               type: "text",
-              text: `유저님의 ${keywords[i]} 매물 알림이 도착했어요!`,
+              text: `유저님의 매물 알림이 도착했어요!`,
             },
             setCarouselMessage(res, keywords[i]),
           ]);
@@ -29,19 +31,35 @@ const multiCheckMamul = (client) => {
 };
 
 const checkMamul = (client, userId) => {
+  let combinedCarousel = {
+    type: "flex",
+    altText: `유저님의 매물 알림이 도착했어요!`,
+    contents: {
+      type: "carousel",
+      contents: [],
+    },
+  };
+  let carousel = {};
   db.getKeywordsByUserId(userId).then((keywords) => {
     for (let i = 0, pending = Promise.resolve(); i < keywords.length; i++) {
+      if (i % 4 == 0) {
+        combinedCarousel["contents"]["contents"] = [];
+      }
       pending = marketMultiSearch(keywords[i]).then((res) => {
-        client.multicast(
-          [userId],
-          [
-            {
-              type: "text",
-              text: `유저님의 ${keywords[i]} 매물 알림이 도착했어요!`,
-            },
-            setCarouselMessage(res, keywords[i]),
-          ]
-        );
+        carousel = setCarouselMessage(res, keywords[i]);
+        combineCarouselMessage(combinedCarousel, carousel);
+        if (i % 4 == 3 || i === keywords.length - 1) {
+          client.multicast(
+            [userId],
+            [
+              {
+                type: "text",
+                text: `유저님의 매물 알림이 도착했어요!`,
+              },
+              combinedCarousel,
+            ]
+          );
+        }
       });
     }
   });

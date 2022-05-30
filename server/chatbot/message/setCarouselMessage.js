@@ -124,7 +124,7 @@ function setCarouselMessage(mamuls, keyword) {
   };
   let carouselMessage = {
     type: "flex",
-    altText: `유저님의 ${keyword}매물 알림!`,
+    altText: `유저님의 ${keyword}매물이 왔어요!`,
     contents: {
       type: "carousel",
       contents: flexMessages,
