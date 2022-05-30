@@ -61,8 +61,6 @@ function setCarouselMessage(mamuls, keyword) {
             mamuls[i]["extraInfo"] = mamuls[i]["extraInfo"].slice(0, searchDot);
           }
         }
-
-        console.log(`unparsed extraInfo : \n${mamuls[i]["extraInfo"]}`);
         let searchValue = "\n";
         let pos = 0;
         let foundPos = 0;
@@ -74,25 +72,12 @@ function setCarouselMessage(mamuls, keyword) {
         if (foundPos !== -1) {
           mamuls[i]["extraInfo"] =
             mamuls[i]["extraInfo"].slice(0, foundPos) + "\n...";
-          console.log(`parsed extraInfo : \n${mamuls[i]["extraInfo"]}`);
         }
         if (mamuls[i]["extraInfo"].length > 40) {
           mamuls[i]["extraInfo"] =
             mamuls[i]["extraInfo"].slice(0, 40) + "\n...";
-          console.log(`parsed extraInfo : \n${mamuls[i]["extraInfo"]}`);
         }
       }
-      // } else if (mamuls[i]["extraInfo"].length > 70) {
-      //   mamuls[i]["extraInfo"] = mamuls[i]["extraInfo"].slice(0, 70) + "\n...";
-      // } else {
-
-      // }
-      // else if (mamuls[i]["extraInfo"].indexOf("\n") !== -1) {
-      //   console.log(mamuls[i]["extraInfo"].indexOf("\n", 4));
-      //   let slicePoint = mamuls[i]["extraInfo"].indexOf("\n", 4);
-      //   mamuls[i]["extraInfo"] =
-      //     mamuls[i]["extraInfo"].slice(0, slicePoint) + "\n...";
-      // }
 
       flexMessage = setFlexMessage(
         mamuls[i]["platform"],
