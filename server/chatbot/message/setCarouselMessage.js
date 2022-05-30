@@ -30,6 +30,20 @@ function setCarouselMessage(mamuls, keyword) {
         "-"
       ),
     };
+    nonMamulMessage["contents"]["header"] = {
+      type: "box",
+      layout: "horizontal",
+      contents: [
+        { type: "text", text: "매무리 봇", size: "sm", color: "#1DB446" },
+        {
+          type: "text",
+          text: `키워드: ${keyword}`,
+          align: "end",
+          color: "#1DB446",
+          weight: "bold",
+        },
+      ],
+    };
     return nonMamulMessage;
   }
   for (i = 0; i < mamuls.length; i++) {
