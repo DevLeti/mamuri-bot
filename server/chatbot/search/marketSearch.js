@@ -7,19 +7,22 @@ const marketMultiSearch = (keyword) => {
   const result = [];
   return new Promise((resolve, reject) => {
     daangnMultiSearch(keyword).then((res) => {
-      if (res !== undefined) {
+      console.log(`daangn: ${res}`);
+      if (res !== undefined && res !== null) {
         for (let i = 0; i < res.length && i < 4; i++) {
           result.push(res[i]);
         }
       }
       bunjangMultiSearch(keyword).then((res) => {
-        if (res !== undefined) {
+        console.log(`bunjang: ${res}`);
+        if (res !== undefined && res !== null) {
           for (let i = 0; i < res.length && i < 4; i++) {
             result.push(res[i]);
           }
         }
         joongnaMultiSearch(keyword).then((res) => {
-          if (res !== undefined) {
+          console.log(`joongna: ${res}`);
+          if (res !== undefined && res !== null) {
             for (let i = 0; i < res.length && i < 4; i++) {
               result.push(res[i]);
             }
