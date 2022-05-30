@@ -72,7 +72,6 @@ function setCarouselMessage(mamuls, keyword) {
           }
         }
 
-        console.log(`unparsed extraInfo : \n${mamuls[i]["extraInfo"]}`);
         let searchValue = "\n";
         let pos = 0;
         let foundPos = 0;
@@ -84,12 +83,10 @@ function setCarouselMessage(mamuls, keyword) {
         if (foundPos !== -1) {
           mamuls[i]["extraInfo"] =
             mamuls[i]["extraInfo"].slice(0, foundPos) + "\n...";
-          console.log(`parsed extraInfo : \n${mamuls[i]["extraInfo"]}`);
         }
         if (mamuls[i]["extraInfo"].length > 40) {
           mamuls[i]["extraInfo"] =
             mamuls[i]["extraInfo"].slice(0, 40) + "\n...";
-          console.log(`parsed extraInfo : \n${mamuls[i]["extraInfo"]}`);
         }
       }
       // } else if (mamuls[i]["extraInfo"].length > 70) {
