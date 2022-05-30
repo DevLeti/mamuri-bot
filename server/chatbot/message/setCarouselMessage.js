@@ -3,21 +3,7 @@ const setFlexMessage = require("./setFlexMessage");
 function setCarouselMessage(mamuls, keyword) {
   let flexMessages = [];
   let flexMessage = {};
-  if (
-    mamuls[0] == undefined
-    // &&
-    // mamuls[1] == undefined &&
-    // mamuls[2] == undefined &&
-    // mamuls[3] == undefined &&
-    // mamuls[4] == undefined &&
-    // mamuls[5] == undefined &&
-    // mamuls[6] == undefined &&
-    // mamuls[7] == undefined &&
-    // mamuls[8] == undefined &&
-    // mamuls[9] == undefined &&
-    // mamuls[10] == undefined &&
-    // mamuls[11] == undefined
-  ) {
+  if (mamuls[0] == undefined) {
     let nonMamulMessage = {
       type: "flex",
       altText: `${keyword} 매물은 아직 없어요!`,

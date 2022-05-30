@@ -1,19 +1,11 @@
 // Line chatbot + Message generate functions
 const line = require("@line/bot-sdk");
-// const setFlexMessage = require("./message/setFlexMessage");
 const setCarouselMessage = require("./message/setCarouselMessage");
-// const setKeywordsFlexMessage = require("./message/setKeywordsFlexMessage");
 
 // Market Search
-// const { daangnSingleSearch } = require("./search/daangnSearch");
-// const { daangnMultiSearch } = require("./search/daangnSearch");
-// const { joongnaSingleSearch } = require("./search/joongnaSearch");
-// const { joongnaMultiSearch } = require("./search/joongnaSearch");
-// const { bunjangSingleSearch } = require("./search/bunjangSearch");
-// const { bunjangMultiSearch } = require("./search/bunjangSearch");
 const { marketMultiSearch } = require("./search/marketSearch");
 
-// File search - Will be deleted (Unused)
+// File search
 const fs = require("fs");
 
 // Cron for Mamul Notification
@@ -24,13 +16,6 @@ const job = schedule.scheduleJob("0 */1 * * *", () => {
 
 // Database APIs
 const db = require("../apis/database");
-// API List
-// database.addKeyword = async function(keyword, userId)
-// database.deleteKeyword = async function(userId, keyword)
-// database.getKeywordsByUserId = async function(userId)
-// database.getUsersByKeyword = async function(keyword)
-// database.getAllUsers = async function()
-// database.getAllKeywords = async function()
 
 // Import credentials for Line chatbot
 require("dotenv").config({ path: __dirname + "/../config/.env" });

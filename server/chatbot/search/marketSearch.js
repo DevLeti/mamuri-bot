@@ -1,7 +1,6 @@
 const { daangnMultiSearch } = require("./daangnSearch");
 const { bunjangMultiSearch } = require("./bunjangSearch");
 const { joongnaMultiSearch } = require("./joongnaSearch");
-const setCarouselMessage = require("../message/setCarouselMessage");
 
 const marketMultiSearch = (keyword) => {
   const result = [];

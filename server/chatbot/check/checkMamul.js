@@ -1,14 +1,8 @@
 const { marketMultiSearch } = require("../search/marketSearch");
 const setCarouselMessage = require("../message/setCarouselMessage");
+
 // Database APIs
 const db = require("../../apis/database");
-// API List
-// database.addKeyword = async function(keyword, userId)
-// database.deleteKeyword = async function(userId, keyword)
-// database.getKeywordsByUserId = async function(userId)
-// database.getUsersByKeyword = async function(keyword)
-// database.getAllUsers = async function()
-// database.getAllKeywords = async function()
 
 const multiCheckMamul = (client) => {
   db.getAllKeywords().then((keywords) => {
