@@ -114,6 +114,13 @@ function handleEvent(event) {
           })
       );
     }
+
+    return Promise.resolve(
+        client.replyMessage(event.replyToken, {
+              type: "text",
+              text: `반갑습니다! 편리한 중고 거래를 위한 매무리 봇 입니다!\n\n채팅창 하단 중앙의 메뉴 열기 버튼을 통해 메뉴를 확인하실 수 있습니다!\n메뉴 열기 버튼이 보이지 않으시다면 채팅창 하단 좌측의 ≡ 버튼을 눌러주세요!`
+          })
+      )
   }
 }
 
