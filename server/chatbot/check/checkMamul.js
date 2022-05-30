@@ -26,7 +26,7 @@ const checkMamul = (client, userId) => {
   db.getKeywordsByUserId(userId).then((keywords) => {
     for (let i = 0, pending = Promise.resolve(); i < keywords.length; i++) {
       pending = marketMultiSearch(keywords[i]).then((res) => {
-        client.multicast([userId], [setCarouselMessage(res, keywords[i])]);
+        client.pushMessage(userId, setCarouselMessage(res, keywords[i]));
       });
     }
   });
