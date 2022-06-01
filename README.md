@@ -45,70 +45,62 @@
 ### Prerequisites
 
 Need to installation docker and docker-compose
-
 - [Docker](https://www.docker.com/get-started/)
 - [Docker-compose](https://docs.docker.com/compose/install/)
 
 Need to write secret
-
 - `mamuri-bot/database/mysql_init/.env`
-
-  ```dotenv
-  # Database Configuration
-  TZ=Asia/Seoul
-  MYSQL_HOST={YOUR_MYSQL_HOST}
-  MYSQL_PORT={YOUR_MYSQL_PORT}
-  MYSQL_ROOT_PASSWORD={YOUR_MYSQL_ROOT_PASSWORD}
-  ```
+   ```dotenv
+   # Database Configuration
+   TZ=Asia/Seoul
+   MYSQL_HOST={YOUR_MYSQL_HOST}
+   MYSQL_PORT={YOUR_MYSQL_PORT}
+   MYSQL_ROOT_PASSWORD={YOUR_MYSQL_ROOT_PASSWORD}
+   ```
 
 - `mamuri-bot/joongna/config/.env`
-
-  ```dotenv
-  # Secret Configuration
-  SECRET.CLIENTID={NAVER_API_CLIENT_ID}
-  SECRET.CLIENTSECRET={NAVER_API_CLIENT_SECRET}
-  # Header Configuration
-  HEADER.COOKIE=NID_SES={YOUR_COOKIE}
-  HEADER.USERAGENT={YOUR_SYSTEM_USER_AGENT}
-  ```
+   ```dotenv
+   # Secret Configuration
+   SECRET.CLIENTID={NAVER_API_CLIENT_ID}
+   SECRET.CLIENTSECRET={NAVER_API_CLIENT_SECRET}
+   # Header Configuration
+   HEADER.COOKIE=NID_SES={YOUR_COOKIE}
+   HEADER.USERAGENT={YOUR_SYSTEM_USER_AGENT}
+   ```
 
 - `mamuri-bot/ngrok/ngrok.yml`
-
-  ```yaml
-  authtoken: { YOUR_NGROK_AUTH_TOKEN }
-  version: 2
-  tunnels:
-    mamuri:
-      proto: http
-      addr: mamuri-server:8080
-  ```
+   ```yaml
+   authtoken: { YOUR_NGROK_AUTH_TOKEN }
+   version: 2
+   tunnels:
+     mamuri:
+       proto: http
+       addr: mamuri-server:8080
+   ```
 
 - `mamuri-bot/server/config/.env`
-  ```dotenv
-  channelAccessToken: {YOUR_LINE_CHANNEL_ACCESS_TOKEN}
-  channelId: {YOUR_LINE_CHANNEL_ID}
-  channelSecret: {YOUR_LINE_CHANNEL_SECRET}
-  ```
+   ```dotenv
+   channelAccessToken: {YOUR_LINE_CHANNEL_ACCESS_TOKEN}
+   channelId: {YOUR_LINE_CHANNEL_ID}
+   channelSecret: {YOUR_LINE_CHANNEL_SECRET}
+   ```
 
 ### Installation
 
 1. Clone the repository
-
 ```shell
 git clone http://khuhub.khu.ac.kr/2018102211/mamuri-bot
 ```
 
 2. Put your secret files that you create in prerequisite to
-
 ```shell
 mamuri-bot/database/mysql_init/.env
 mamuri-bot/joongna/config/.env
 mamuri-bot/ngrok/ngrok.yml
 mamuri-bot/server/config/.env
-```
-
+   ```
+   
 3. Executing `deploy.sh` for deployment with docker-compose. This script will `build` all images automatically and `docker-compose up` on your system
-
 ```shell
 #!/usr/bin/env bash
 ./deploy.sh
@@ -122,15 +114,13 @@ mamuri-bot/server/config/.env
 ```
 
 4. Check your ngrok public URL
-
 ```shell
 docker logs mamuri-ngrok
 ```
-
 ![ngrok_deployment_1](http://khuhub.khu.ac.kr/2018102211/mamuri-bot/uploads/4ccdc73c9efc4c3dc58147f17b992cc6/그림1.png)
 
 5. Set your public URL to Line chatbot configuration for webhook
-   ![ngrok_deployment_2](http://khuhub.khu.ac.kr/2018102211/mamuri-bot/uploads/5dd076f66629948dd1682fc4054ff459/그림2.png)
+![ngrok_deployment_2](http://khuhub.khu.ac.kr/2018102211/mamuri-bot/uploads/5dd076f66629948dd1682fc4054ff459/그림2.png)
 
 ## Contributing
 
