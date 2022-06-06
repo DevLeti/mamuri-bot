@@ -20,6 +20,9 @@
 
 - 봇을 사용해 키워드를 입력 받습니다.
 - 주기적 크롤링을 통해 새로운 매물을 감지해 알림을 전송합니다.
+- 다음의 QR코드를 통해 챗봇 서비스 사용이 가능합니다.
+
+<div align="center"><img src="./img/qrcode.png" width="20%" height="20%"></div>
 
 ### Overview
 
