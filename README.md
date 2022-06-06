@@ -10,7 +10,7 @@
 [![mysql-5.7](https://img.shields.io/badge/Mysql-5.7-yellowgreen?logo=mysql)] (https://www.mysql.com)
 [![ngrok-v3](https://img.shields.io/badge/ngrok-v3-yellowgreen?logo=ngrok)] (https://ngrok.com)
 
-<div align="center"><img src="./readme_logo.png" width="20%" height="20%"></div>
+<div align="center"><img src="./img/readme_logo.png" width="20%" height="20%"></div>
 
 # 매무리 봇 (Mamuri-bot)
 
@@ -21,9 +21,13 @@
 - 봇을 사용해 키워드를 입력 받습니다.
 - 주기적 크롤링을 통해 새로운 매물을 감지해 알림을 전송합니다.
 
+### Overview
+
+![mockup_1x](./img/mockup_1x.png)
+
 ### Project Architecture
 
-![project_structure](./project_structure.png)
+![project_structure](./img/project_structure.png)
 
 ### Built With
 
